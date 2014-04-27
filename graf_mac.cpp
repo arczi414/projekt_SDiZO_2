@@ -5,7 +5,8 @@
 
 using namespace std;
 
-MGraf::MGraf()
+MGraf::MGraf() :
+macierz(NULL), wagi(NULL)
 {
 
 }
@@ -21,6 +22,9 @@ MGraf::~MGraf()
 	{
 		delete[] wagi;
 	}
+
+	macierz = NULL;
+	wagi = NULL;
 }
 
 bool MGraf::hasMax(int n)
@@ -78,12 +82,12 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
 {
 	srand(time(NULL));
 
-	if (macierz == NULL)
+	if (macierz != NULL)
 	{
 		delete[] macierz;
 	}
 	
-	if (wagi == NULL)
+	if (wagi != NULL)
 	{
 		delete[] wagi;
 	}
