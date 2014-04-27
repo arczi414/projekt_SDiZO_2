@@ -21,6 +21,9 @@ private:
 	int N;				// liczba wierzcholkow
 	int M;				// liczba krawedzi
 
+	bool hasMax(int n);	// mowi czy dany wierzcholek posiada wszystkie mozliwe krawedzie
+	char hasConnection(int n1, int n2); // mowi czy dwa wierzcholki sa polaczone
+
 public:
 	MGraf();
 	~MGraf();

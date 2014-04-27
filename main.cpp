@@ -8,9 +8,14 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	MGraf graf;
 
-	graf.losujGraf(5, 0.5);
+	for (int i = 0; i < 1000000; i++)
+	{
+		graf.losujGraf(5, 1);
+	}
+
 	graf.pokazGraf();
 
+	_getch();
 	return 0;
 }
 
