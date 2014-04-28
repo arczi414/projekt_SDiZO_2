@@ -206,12 +206,12 @@ public:
 
 		if (bierz != NULL)
 		{
-			std::cout << bierz;
+			std::cout << *bierz;
 
 			while (bierz->nextElement != NULL)
 			{
 				bierz = bierz->nextElement;
-				std::cout << ", " << bierz;
+				std::cout << ", " << *bierz;
 			}
 		}
 	};
