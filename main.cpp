@@ -8,9 +8,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	MGraf graf;
 
-	for (int i = 0; i < 1000000; i++)
+	for (int i = 0; i < 10000; i++)
 	{
-		graf.losujGraf(5, 1);
+		graf.losujGraf(5, 0.82365);
 	}
 
 	graf.pokazGraf();

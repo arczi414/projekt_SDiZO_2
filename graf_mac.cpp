@@ -7,9 +7,7 @@ using namespace std;
 
 MGraf::MGraf() :
 macierz(NULL), wagi(NULL)
-{
-
-}
+{ }
 
 MGraf::~MGraf()
 {
@@ -27,6 +25,10 @@ MGraf::~MGraf()
 	wagi = NULL;
 }
 
+/*
+	Funkcja zwraca true, jesli dany wierzcholek posiada juz wszystkie
+	mozliwe krawedzie.
+*/
 bool MGraf::hasMax(int n)
 {
 	int n_kraw = 0; // liczba powiazanych krawedzi
@@ -78,6 +80,9 @@ char MGraf::hasConnection(int n1, int n2)
 	return -1;
 }
 
+/*
+	Funkcja tworzaca losowy graf o zadanej gestosci.
+*/
 void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
 {
 	srand(time(NULL));
@@ -179,6 +184,9 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
 	}
 }
 
+/*
+	Funkcja wyswietlajaca na ekranie graf w postaci macierzowej.
+*/
 void MGraf::pokazGraf()
 {
 	int size = N * M;
@@ -212,4 +220,15 @@ void MGraf::pokazGraf()
 			cout << wagi[i] << "\t";
 		}
 	}
+}
+
+
+
+/*_____________minimalne drzewo rozpinajace___________*/
+
+MGraf* MGraf::mstPrime()
+{
+	MGraf *mst = new MGraf();
+
+	return mst;
 }
