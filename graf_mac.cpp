@@ -1,12 +1,14 @@
 #include "stdafx.h"
 #include "graf_mac.h"
+#include "kopiec.h"
+#include "krawedz_mac.h"
 #include <cstdlib>
 #include <ctime>
 
 using namespace std;
 
 MGraf::MGraf() :
-macierz(NULL), wagi(NULL)
+macierz(NULL), wagi(NULL), N(0), M(0)
 { }
 
 MGraf::~MGraf()
@@ -222,13 +224,156 @@ void MGraf::pokazGraf()
 	}
 }
 
+/*
+	Funkcja dodaje do grafu nowa krawedz, na podstawie argumentow.
+	Jesli dodanie powiodlo sie zwraca true, jesli nie, zwraca false.
+*/
+bool MGraf::dodajKraw(int start, int koniec, int waga)
+{
+	// jesli nie istnieje jeden z podanych wierzcholkow
+	if (start >= N || start < 0 || koniec >= N || koniec < 0)
+	{
+		return false;
+	}
+	else
+	{
+		// zwiekszenie liczby krawedzi
+		M++;
 
+		char *macierz_temp = macierz;
+		int *wagi_temp = wagi;
+
+		macierz = new char[N*M];
+		wagi = new int[N*M];
+
+		// przepisanie istniejacych wartosci
+		int diff = 0; // zawiera roznice w indeksach nowej i starej macierzy
+		for (int i = 0; i < N*M; i++)
+		{
+			// jesli indeks nie wskazuje na nowa krawedz
+			if (i % M != 0)
+			{
+				macierz[i] = macierz_temp[i-diff];
+				wagi[i] = wagi_temp[i - diff];
+			}
+			// jesli indeks wskazuje na nowa krawedz
+			else
+			{
+				// sprawdzenie czy aktualny wierzcholek jest jednym z argumentow
+				int w = static_cast<int>(i / M);
+				if (w == start)
+				{
+					macierz[i] = 1;
+					wagi[i] = waga;
+				}
+				else if (w == koniec)
+				{
+					macierz[i] = -1;
+					wagi[i] = waga;
+				}
+				else
+				{
+					macierz[i] = 0;
+					wagi[i] = 0;
+				}
+
+				diff++;
+			}
+		}
+	}
+
+	return true;
+}
+
+/*
+	Funkcja dodaje nowy wierzcholek do grafu i zwraca numer(indeks) dodanego
+	wierzcholka. np. dla wierzcholka nr 1 indeks wynosi 0
+*/
+int MGraf::dodajWierzch()
+{
+	// jesli nie ma krawedzi, zwieksza sie tylko liczba wierzcholkow
+	if (M == 0)
+	{
+		N++;
+	}
+	// w przeciwnym przypadku konieczne jest przepisanie calej struktury
+	else
+	{
+		char *macierz_temp = macierz;
+		int *wagi_temp = wagi;
+
+		macierz = new char[(N + 1)*M];
+		wagi = new int[(N + 1)*M];
+
+		for (int i = 0; i < N*M; i++)
+		{
+			macierz[i] = macierz_temp[i];
+			wagi[i] = wagi_temp[i];
+		}
+
+		delete[] macierz_temp;
+		delete[] wagi_temp;
+
+		// wpisanie zer w nowym wierszu kazdej krawedzi
+		for (int i = N*M; i < N*M + M; i++)
+		{
+			macierz[i] = wagi[i] = 0;
+		}
+
+		// zwiekszenie liczby wierzcholkow
+		N++;
+	}
+
+	return N-1;
+}
 
 /*_____________minimalne drzewo rozpinajace___________*/
 
+/*
+	Algorytm traktuje krawedzie skierowane tak jakby byly
+	krawedziami nieskierowanymi, dlatego kazda krawedz skierowana
+	stanie sie krawedzia nieskierowana. Jesli nastapi konflikt
+	wag, algorytm wybierze jadna z nich arbitralnie.
+*/
 MGraf* MGraf::mstPrime()
 {
 	MGraf *mst = new MGraf();
+
+	// dodanie do drzewa mst wierzcholkow
+	for (int i = 0; i < N; i++)
+	{
+		mst->dodajWierzch();
+	}
+
+	int n = N - 1; // liczba krawedzi, ktore nalezy wstawic, aby uzyskac spojne drzewo
+	int w = 0; // ilosc wierzcholkow z ktorych wyszukujemy krawedzie
+
+	Kopiec<MKrawedz> kp; // kolejka priorytetowa do przetrzymywania krawedzi
+	kp.setMin();
+
+	for (n; n > 0; n--)
+	{
+		//________________wybranie dostepnych krawedzi_________________________
+		for (int i = 0; i <= w; i++)
+		{
+			// przeszukanie krawedzi wierzcholka 'w'
+			for (int k = 0; k < M; k++)
+			{
+				if (macierz[i*M + k] == 1 || macierz[i*M + k] == -1)
+				{
+					MKrawedz kraw(wagi[i*M + k], k);
+					if (!kp.find(kraw))
+					{
+						kp.push(kraw);
+					}
+				}
+			}
+		}
+
+		//________________dodanie krawedzi o najmniejszej wadze__________________
+		//MKrawedz *temp_k = kp.pop();
+		//mst->dodajKraw(temp_k->)
+	}
 
 	return mst;
 }

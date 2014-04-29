@@ -30,6 +30,8 @@ public:
 
 	void losujGraf(int n, float gestosc, bool ujemne_wagi = false);	// n - liczba wierzcholkow
 	void pokazGraf();	// wypisuje graf na stdout
+	bool dodajKraw(int start, int koniec, int waga); // dodaje krawedz
+	int dodajWierzch(); // dodaje wierzcholek
 
 	/* ******************Minimalne drzewo rozpinajace**************** */
 	MGraf* mstPrime();

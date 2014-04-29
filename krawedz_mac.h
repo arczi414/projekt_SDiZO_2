@@ -15,6 +15,7 @@ public:
 
 	// operatory
 	bool operator ==(const MKrawedz &mk);
+	bool operator !=(const MKrawedz &mk);
 	bool operator >(const MKrawedz &mk);
 	bool operator <(const MKrawedz &mk);
 	bool operator >=(const MKrawedz &mk);

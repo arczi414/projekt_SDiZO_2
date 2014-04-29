@@ -32,6 +32,14 @@ bool MKrawedz::operator ==(const MKrawedz &mk)
 	return false;
 }
 
+bool MKrawedz::operator !=(const MKrawedz &mk)
+{
+	if (mk.waga == waga && mk.nr_kraw == nr_kraw)
+		return false;
+
+	return false;
+}
+
 bool MKrawedz::operator >(const MKrawedz &mk)
 {
 	if (waga > mk.waga)
