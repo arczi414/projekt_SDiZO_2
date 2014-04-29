@@ -7,6 +7,7 @@ class Kopiec
 private:
 	T* kopiec;
 	int n; // rozmiar kopca
+	bool max_min = false; // false - kopiec max, true - kopiec min
 	
 	/*
 		Funkcja rekurencyjna, pomocnicza dla find().
@@ -98,13 +99,27 @@ public:
 		nowyElement = n - 1;
 		rodzic = floor((nowyElement - 1) / 2);
 
-		while (rodzic >= 0 && kopiec[rodzic] < kopiec[nowyElement])
+		if (max_min == false)
 		{
-			T temp = kopiec[rodzic];
-			kopiec[rodzic] = kopiec[nowyElement];
-			kopiec[nowyElement] = temp;
-			nowyElement = rodzic;
-			rodzic = floor((nowyElement - 1) / 2);
+			while (rodzic >= 0 && kopiec[rodzic] < kopiec[nowyElement])
+			{
+				T temp = kopiec[rodzic];
+				kopiec[rodzic] = kopiec[nowyElement];
+				kopiec[nowyElement] = temp;
+				nowyElement = rodzic;
+				rodzic = floor((nowyElement - 1) / 2);
+			}
+		}
+		else
+		{
+			while (rodzic >= 0 && kopiec[rodzic] > kopiec[nowyElement])
+			{
+				T temp = kopiec[rodzic];
+				kopiec[rodzic] = kopiec[nowyElement];
+				kopiec[nowyElement] = temp;
+				nowyElement = rodzic;
+				rodzic = floor((nowyElement - 1) / 2);
+			}
 		}
 	};
 
@@ -131,23 +146,13 @@ public:
 			int left = 1;
 			int right = 2;
 
-			while ((left < n - 1) && (kopiec[left] > kopiec[akt] || kopiec[right] > kopiec[akt]))
+			if (max_min == false)
 			{
-				if (right >= n - 1)
+				while ((left < n - 1) && (kopiec[left] > kopiec[akt] || kopiec[right] > kopiec[akt]))
 				{
-					T saveL = kopiec[akt];
-					kopiec[akt] = kopiec[left];
-					kopiec[left] = saveL;
-
-					akt = left;
-					left = 2 * akt + 1;
-					right = 2 * akt + 2;
-				}
-				else
-				{
-					if (kopiec[left] > kopiec[right])
+					if (right >= n - 1)
 					{
-						int saveL = kopiec[akt];
+						T saveL = kopiec[akt];
 						kopiec[akt] = kopiec[left];
 						kopiec[left] = saveL;
 
@@ -157,13 +162,65 @@ public:
 					}
 					else
 					{
-						T saveR = kopiec[akt];
-						kopiec[akt] = kopiec[right];
-						kopiec[right] = saveR;
+						if (kopiec[left] > kopiec[right])
+						{
+							int saveL = kopiec[akt];
+							kopiec[akt] = kopiec[left];
+							kopiec[left] = saveL;
 
-						akt = right;
+							akt = left;
+							left = 2 * akt + 1;
+							right = 2 * akt + 2;
+						}
+						else
+						{
+							T saveR = kopiec[akt];
+							kopiec[akt] = kopiec[right];
+							kopiec[right] = saveR;
+
+							akt = right;
+							left = 2 * akt + 1;
+							right = 2 * akt + 2;
+						}
+					}
+				}
+			}
+			else
+			{
+				while ((left < n - 1) && (kopiec[left] < kopiec[akt] || kopiec[right] < kopiec[akt]))
+				{
+					if (right >= n - 1)
+					{
+						T saveL = kopiec[akt];
+						kopiec[akt] = kopiec[left];
+						kopiec[left] = saveL;
+
+						akt = left;
 						left = 2 * akt + 1;
 						right = 2 * akt + 2;
+					}
+					else
+					{
+						if (kopiec[left] < kopiec[right])
+						{
+							int saveL = kopiec[akt];
+							kopiec[akt] = kopiec[left];
+							kopiec[left] = saveL;
+
+							akt = left;
+							left = 2 * akt + 1;
+							right = 2 * akt + 2;
+						}
+						else
+						{
+							T saveR = kopiec[akt];
+							kopiec[akt] = kopiec[right];
+							kopiec[right] = saveR;
+
+							akt = right;
+							left = 2 * akt + 1;
+							right = 2 * akt + 2;
+						}
 					}
 				}
 			}
@@ -245,6 +302,16 @@ public:
 			std::cout << kopiec[0] << "\n";
 			printTree(0, 1);
 		}
+	};
+
+	void setMax()
+	{
+		max_min = false;
+	};
+
+	void setMin()
+	{
+		max_min = true;
 	};
 
 };

@@ -22,6 +22,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	List<MKrawedz> ls;
 	Kopiec<MKrawedz> kp;
+	kp.setMin();
 
 	MKrawedz k1(32, 0);
 	MKrawedz k2(322, 1);
