@@ -16,14 +16,6 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	graf->pokazGraf();
 
-	cout << "\n\n";
-
-	cout << *(graf->getWeight(3));
-
-	//MGraf *mst = graf->mstPrime();
-
-	//mst->pokazGraf();
-
 	_getch();
 	return 0;
 }

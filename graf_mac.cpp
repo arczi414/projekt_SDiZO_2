@@ -107,12 +107,17 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
 	int m = M; // liczba krawedzi pozostalych do wypelnienia
 
 	macierz = new char[N * M];
-	wagi = new int[N * M];
+	wagi = new int[M];
 
 	// wypelnienie macierzy i wag zerami
 	for (int i = 0; i < N*M; i++)
 	{
-		macierz[i] = wagi[i] = 0;
+		macierz[i] = 0;
+	}
+
+	for (int i = 0; i < M; i++)
+	{
+		wagi[i] = 0;
 	}
 
 	// i - wierzcholek, j - krawedz
@@ -132,8 +137,7 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
 		// +/- rand
 		a = a * rand();
 
-		wagi[begin] = a;
-		wagi[end] = a;
+		wagi[j] = a;
 	}
 
 	/* ***********dodanie pozostalych krawedzi************* */
@@ -172,16 +176,14 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
 			macierz[i_begin] = -1;
 			macierz[i_end] = 1;
 
-			wagi[i_begin] = r;
-			wagi[i_end] = r;
+			wagi[nr_m] = r;
 		}
 		else
 		{
 			macierz[i_begin] = 1;
 			macierz[i_end] = -1;
 
-			wagi[i_begin] = r;
-			wagi[i_end] = r;
+			wagi[nr_m] = r;
 		}
 	}
 }
@@ -210,17 +212,10 @@ void MGraf::pokazGraf()
 	cout << "\n\n";
 
 	// wypisanie zawartosci macierzy wag
-	cout << "Macierz wag:";
-	for (int i = 0; i < size; i++)
+	cout << "Tablica wag:";
+	for (int i = 0; i < M; i++)
 	{
-		if (i % M == 0)
-		{
-			cout << "\n" << wagi[i] << "\t";
-		}
-		else
-		{
-			cout << wagi[i] << "\t";
-		}
+		cout << wagi[i] << ", ";
 	}
 }
 
