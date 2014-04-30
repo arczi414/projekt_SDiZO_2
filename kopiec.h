@@ -164,7 +164,7 @@ public:
 					{
 						if (kopiec[left] > kopiec[right])
 						{
-							int saveL = kopiec[akt];
+							T saveL = kopiec[akt];
 							kopiec[akt] = kopiec[left];
 							kopiec[left] = saveL;
 
@@ -203,7 +203,7 @@ public:
 					{
 						if (kopiec[left] < kopiec[right])
 						{
-							int saveL = kopiec[akt];
+							T saveL = kopiec[akt];
 							kopiec[akt] = kopiec[left];
 							kopiec[left] = saveL;
 

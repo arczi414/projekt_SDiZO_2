@@ -286,6 +286,78 @@ bool MGraf::dodajKraw(int start, int koniec, int waga)
 }
 
 /*
+	Funkcja zwraca indeks wierzcholka poczatkowego krawedzi.
+	Jesli funkcja zwroci -1, oznacza to, ze podana krawedz nie istnieje.
+*/
+int MGraf::getStart(int k)
+{
+	int start = -1;
+
+	for (int i = 0; i < N; i++)
+	{
+		if (macierz[M*i + k] == 1)
+		{
+			start = i;
+			break;
+		}
+	}
+
+	return start;
+}
+
+/*
+	Funkcja zwraca indeks wierzcholka koncowego krawedzi.
+	Jesli funkcja zwroci -1, oznacza to, ze podana krawedz nie istnieje.
+*/
+int MGraf::getEnd(int k)
+{
+	int end = -1;
+
+	for (int i = 0; i < N; i++)
+	{
+		if (macierz[M*i + k] == -1)
+		{
+			end = i;
+			break;
+		}
+	}
+
+	return end;
+}
+
+/*
+	Funkcja zwraca wskaznik na zmienna int, zawierajaca wage danej krawedzi.
+	Jesli zwroci NULL, oznacza to, ze podana krawedz nie istnieje.
+*/
+int* MGraf::getWeight(int k)
+{
+	int *weight = NULL;
+	int index = -1;
+
+	if (k < 0 || k >= M)
+	{
+		return NULL;
+	}
+	else
+	{
+		// znalezienie -1 lub 1 w macierzy incydencji
+		// aby upewnic sie, ze pobrana zostanie rzeczywista waga
+		for (int i = 0; i < N; i++)
+		{
+			if (macierz[i*M + k] == 1 || macierz[i*M + k] == -1)
+			{
+				index = i*M + k;
+				break;
+			}
+		}
+
+		weight = new int(wagi[index]);
+	}
+
+	return weight;
+}
+
+/*
 	Funkcja dodaje nowy wierzcholek do grafu i zwraca numer(indeks) dodanego
 	wierzcholka. np. dla wierzcholka nr 1 indeks wynosi 0
 */
@@ -371,8 +443,8 @@ MGraf* MGraf::mstPrime()
 		}
 
 		//________________dodanie krawedzi o najmniejszej wadze__________________
-		//MKrawedz *temp_k = kp.pop();
-		//mst->dodajKraw(temp_k->)
+		MKrawedz *k = kp.pop();
+		mst->dodajKraw(getStart(k->nr_kraw), getEnd(k->nr_kraw), k->waga);
 	}
 
 	return mst;

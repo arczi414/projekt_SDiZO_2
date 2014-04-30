@@ -32,6 +32,9 @@ public:
 	void pokazGraf();	// wypisuje graf na stdout
 	bool dodajKraw(int start, int koniec, int waga); // dodaje krawedz
 	int dodajWierzch(); // dodaje wierzcholek
+	int getStart(int k); // zwraca indeks wierzcholka startowego krawedzi
+	int getEnd(int k); // zwraca indeks wierzcholka koncowego krawedzi
+	int* getWeight(int k); // zwraca wage danej krawedzi
 
 	/* ******************Minimalne drzewo rozpinajace**************** */
 	MGraf* mstPrime();
