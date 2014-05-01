@@ -572,13 +572,13 @@ bool MGraf::usunKraw(int k)
 	Algorytm traktuje krawedzie skierowane tak jakby byly
 	krawedziami nieskierowanymi, dlatego kazda krawedz skierowana
 	stanie sie krawedzia nieskierowana. Jesli nastapi konflikt
-	wag, algorytm wybierze jadna z nich arbitralnie.
+	wag, algorytm wybierze mniejsza.
 
 	Jesli podwojne_kraw ustawione sa jako true, funkcja przed
 	wykonaniem algorymtu prima pousuwa z grafu podwojne krawedzie
 	pomiedzy wierzcholkami.
 */
-MGraf* MGraf::mstPrime(bool podwojne_kraw)
+MGraf* MGraf::mstPrim(bool podwojne_kraw)
 {
 	if (podwojne_kraw)
 	{
@@ -652,4 +652,41 @@ MGraf* MGraf::mstPrime(bool podwojne_kraw)
 	cout << "\b\b\b\b\b" << setw(4) << 100 << "%";
 
 	return mst;
+}
+
+/*
+	Algorytm traktuje krawedzie skierowane tak jakby byly
+	krawedziami nieskierowanymi, dlatego kazda krawedz skierowana
+	stanie sie krawedzia nieskierowana. Jesli nastapi konflikt
+	wag, algorytm wybierze mniejsza.
+
+	Jesli podwojne_kraw ustawione sa jako true, funkcja przed
+	wykonaniem algorymtu prima pousuwa z grafu podwojne krawedzie
+	pomiedzy wierzcholkami.
+*/
+MGraf* MGraf::mstKruskal(bool podwojne_kraw)
+{
+	if (podwojne_kraw)
+	{
+		usunPodwojne();
+	}
+
+	MGraf *mst = new MGraf();
+
+	// dodanie do drzewa mst wierzcholkow
+	for (int i = 0; i < N; i++)
+	{
+		mst->dodajWierzch();
+	}
+
+	// kolejka przechowujaca krawedzie
+	Kopiec<MKrawedz> krawedzie();
+
+	// dodanie wszystkich krawedzi do kopca
+	for (int i = 0; i < M; i++)
+	{
+		MKrawedz k(*getWeight(i), i);
+	}
+
+	return new MGraf();
 }

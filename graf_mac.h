@@ -43,7 +43,8 @@ public:
 	int getNumOfEdges() { return M; }; // zwraca liczbe krawedzi
 
 	/* ******************Minimalne drzewo rozpinajace**************** */
-	MGraf* mstPrime(bool podwojne_kraw = false);
+	MGraf* mstPrim(bool podwojne_kraw = false);
+	MGraf* mstKruskal(bool podwojne_kraw = false);
 
 };
 

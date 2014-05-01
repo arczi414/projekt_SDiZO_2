@@ -2,6 +2,7 @@
 #include "menu.h"
 #include "graf_mac.h"
 #include "krawedz_mac.h"
+#include "zbiory_rozlaczne.h"
 #include "lista.h"
 #include "kopiec.h"
 #include <iomanip>
@@ -12,14 +13,16 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	//manageMenu();
 
-	MGraf *graf = new MGraf();
-	graf->losujGraf(10, 1, false, false);
-	cout << endl;
-	//graf->pokazGraf();
+	ZbioryRozlaczne zr(10);
 
-	MGraf *mst = graf->mstPrime();
-	cout << "\n\n";
-	//mst->pokazGraf();
+	zr.UnionSets(0, 1);
+	zr.UnionSets(1, 2);
+	zr.UnionSets(1, 7);
+	zr.UnionSets(8, 1);
+	zr.UnionSets(3, 1);
+	zr.UnionSets(4, 5);
+	zr.UnionSets(9, 0);
+
 	// TESTY JEDNOSTKOWE
 
 	/*

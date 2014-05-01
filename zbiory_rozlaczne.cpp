@@ -1,10 +1,17 @@
 #include "stdafx.h"
 #include "zbiory_rozlaczne.h"
 
-ZbioryRozlaczne::ZbioryRozlaczne(int n) :
-n(n)
-{ 
-	zbior = new Node[n];
+ZbioryRozlaczne::ZbioryRozlaczne(int n)
+{
+	this->n = n;
+	zbior = new int[n];
+	repr = new int[n];
+
+	for (int i = 0; i < n; i++)
+	{
+	
+		zbior[i] = repr[i] = i;
+	}
 }
 
 ZbioryRozlaczne::~ZbioryRozlaczne()
@@ -13,58 +20,30 @@ ZbioryRozlaczne::~ZbioryRozlaczne()
 	{
 		delete[] zbior;
 	}
+
+	if (repr != NULL)
+	{
+		delete[] repr;
+	}
+
+	zbior = NULL;
+	repr = NULL;
 }
 
 /*
-	Funkcja tworzy zbior, w ktorym korzeniem jest podany wierzcholek.
+	Funkcja laczy dwa zbiory w jeden, reprezentantem nowego zbioru
+	staje sie reprezentant pierwszego zbioru.
 */
-void ZbioryRozlaczne::MakeSet(Node *node)
+void ZbioryRozlaczne::UnionSets(int w1, int w2)
 {
-	zbior[node->w].up = &zbior[node->w];
-}
-
-/*
-	Funkcja zwaca wierzcholek bedacy korzeniem zbioru.
-*/
-Node* ZbioryRozlaczne::FindSet(Node *node)
-{
-	Node *temp = node;
-	while (temp->up != temp)
+	// wyszukanie wszystkich wierzcholkow w2
+	for (int i = 0; i < n; i++)
 	{
-		temp = temp->up;
+		if (repr[i] == repr[w2] && i != w2)
+		{
+			repr[i] == repr[w1];
+		}
 	}
 
-	return temp;
-}
-
-/*
-	Funkcja dolacza zbior z node2 do zbioru z node1. Jesli
-	obydwa wierzcholki maja wspolny korzen, funkcja konczy dzialanie.
-*/
-void ZbioryRozlaczne::UnionSets(Node *node1, Node *node2)
-{
-	Node *root1 = node1;
-	Node *root2 = node2;
-
-	// wyszukanie korzenia dla node1
-	while (root1->up != root1)
-	{
-		root1 = root1->up;
-	}
-
-	// wyszukanie korzenia dla node2
-	while (root2->up != root2)
-	{
-		root2 = root2->up;
-	}
-
-	// wierzcholki nie moga miec tego samego korzenia
-	if (root1 == root2)
-	{
-		return;
-	}
-	else
-	{
-		root2->up = root1;
-	}
+	repr[w2] = repr[w1];
 }
