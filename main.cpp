@@ -13,14 +13,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	//manageMenu();
 
 	MGraf *graf = new MGraf();
-	graf->losujGraf(4, 1, true, false);
-	graf->pokazGraf();
+	graf->losujGraf(10, 1, false, false);
+	cout << endl;
 	//graf->pokazGraf();
 
-	//graf->usunPodwojne();
-
-	graf->pokazGraf();
-
+	MGraf *mst = graf->mstPrime();
+	cout << "\n\n";
+	//mst->pokazGraf();
 	// TESTY JEDNOSTKOWE
 
 	/*

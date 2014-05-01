@@ -154,7 +154,7 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw
 		// +/- rand
 		a = a * rand();
 
-		wagi[j] = a;
+		wagi[j] = ujemne_wagi ? a : abs(a);
 	}
 
 	/* ***********dodanie pozostalych krawedzi************* */
@@ -217,14 +217,14 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw
 			macierz[i_begin] = -1;
 			macierz[i_end] = 1;
 
-			wagi[nr_m] = r;
+			wagi[nr_m] = ujemne_wagi ? r : abs(r);
 		}
 		else
 		{
 			macierz[i_begin] = 1;
 			macierz[i_end] = -1;
 
-			wagi[nr_m] = r;
+			wagi[nr_m] = ujemne_wagi ? r : abs(r);
 		}
 	}
 
@@ -573,12 +573,21 @@ bool MGraf::usunKraw(int k)
 	krawedziami nieskierowanymi, dlatego kazda krawedz skierowana
 	stanie sie krawedzia nieskierowana. Jesli nastapi konflikt
 	wag, algorytm wybierze jadna z nich arbitralnie.
+
+	Jesli podwojne_kraw ustawione sa jako true, funkcja przed
+	wykonaniem algorymtu prima pousuwa z grafu podwojne krawedzie
+	pomiedzy wierzcholkami.
 */
-/*
-MGraf* MGraf::mstPrime()
+MGraf* MGraf::mstPrime(bool podwojne_kraw)
 {
+	if (podwojne_kraw)
+	{
+		usunPodwojne();
+	}
+
 	MGraf *mst = new MGraf();
-	DrzewoCzerCzar wierzch;
+	DrzewoCzerCzar dodaneKraw; // zawiera numery dodanych krawedzi
+	DrzewoCzerCzar dodaneWierzch; // zawiera numery dodanych wierzcholkow
 
 	// dodanie do drzewa mst wierzcholkow
 	for (int i = 0; i < N; i++)
@@ -591,45 +600,56 @@ MGraf* MGraf::mstPrime()
 
 	int poprz = 0; // indeks poprzednio dodanego wierzcholka do grafu
 
-	//________________wybranie dostepnych krawedzi_________________________
-	for (int i = 0; i < N; i++)
+	dodaneWierzch.insert(poprz);
+
+	cout << "Trwa wyszukiwanie MST (algorytm Prima):";
+	cout << setw(5) << " ";
+
+	for (int i = 0; i < N-1; i++)
 	{
-		// przeszukanie krawedzi wierzcholka 'poprz'
+		// pokazuje postep algorytmu
+		int wart = (static_cast<float>(i) / (N - 1)) * 100;
+		cout << "\b\b\b\b\b" << setw(4) << wart << "%";
+
+		// przeszukanie dostepnych krawedzi wierzcholka 'poprz'
 		for (int k = 0; k < M; k++) // k - nr krawedzi
 		{
 			if (macierz[poprz*M + k] == 1 || macierz[poprz*M + k] == -1)
 			{
 				MKrawedz kraw(wagi[k], k);
-				if (!kp.find(kraw) && )
+				if (dodaneKraw.find(k) == NULL)
 				{
 					kp.push(kraw);
 				}
 			}
 		}
 
-		// dodanie krawedzi o najmniejszej wadze
+		// dodanie krawedzi o najmniejszej wadze prowadzacej do jeszcze
+		// nie dodanego wierzcholka
 		MKrawedz *kr = kp.pop();
 
 		int start = getStart(kr->nr_kraw);
 		int end = getEnd(kr->nr_kraw);
 
-		while (wierzch.find(start) || wierzch.find(end))
+		while (dodaneWierzch.find(start) && dodaneWierzch.find(end))
 		{
-			kr = kp.pop();
 			start = getStart(kr->nr_kraw);
 			end = getEnd(kr->nr_kraw);
+			kr = kp.pop();
 		}
 		
-		mst->dodajKraw(getStart(kr->nr_kraw), getEnd(kr->nr_kraw), kr->waga);
-		
-		// dodanie nowego wierzcholka
-		wierzch.insert(poprz);
+		mst->dodajKraw(start, end, kr->waga);
+		dodaneKraw.insert(kr->nr_kraw);
 
 		poprz = (start == poprz ? end : start); // nowo dodany wierzcholek
+
+		dodaneWierzch.insert(poprz);
 		
 		delete kr;
 	}
 
+	// pokazuje postep algorytmu
+	cout << "\b\b\b\b\b" << setw(4) << 100 << "%";
+
 	return mst;
 }
-*/
