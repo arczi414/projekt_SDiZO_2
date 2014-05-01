@@ -3,6 +3,7 @@
 #include "kopiec.h"
 #include "krawedz_mac.h"
 #include "drzewoCzerCzar.h"
+#include "zbiory_rozlaczne.h"
 #include <cstdlib>
 #include <iomanip>
 #include <ctime>
@@ -680,13 +681,53 @@ MGraf* MGraf::mstKruskal(bool podwojne_kraw)
 	}
 
 	// kolejka przechowujaca krawedzie
-	Kopiec<MKrawedz> krawedzie();
+	Kopiec<MKrawedz> krawedzie;
+	krawedzie.setMin();
+
+	// zbiory rozlaczne do przechowywania dodanych wierzcholkow
+	ZbioryRozlaczne wierzcholki(N);
 
 	// dodanie wszystkich krawedzi do kopca
 	for (int i = 0; i < M; i++)
 	{
-		MKrawedz k(*getWeight(i), i);
+		int *w = getWeight(i);
+		MKrawedz k(*w, i);
+		delete w;
+		krawedzie.push(k);
 	}
 
-	return new MGraf();
+	// wstawienie krawedzi
+	int wstawione = 0;
+	MKrawedz *mk;
+
+	cout << "Trwa wyszukiwanie MST (algorytm Kruskala):";
+	cout << setw(5) << " ";
+
+	while (wstawione < N - 1)
+	{
+		// pokazuje postep algorytmu
+		int wart = (static_cast<float>(wstawione) / (N - 1)) * 100;
+		cout << "\b\b\b\b\b" << setw(4) << wart << "%";
+
+		mk = krawedzie.pop();
+
+		int start = getStart(mk->nr_kraw);
+		int end = getEnd(mk->nr_kraw);
+
+		// sprawdzenie czy laczone wierzcholki znajduja sie w rozlacznych zbiorach
+		if (wierzcholki.FindSet(start) != wierzcholki.FindSet(end))
+		{
+			int *w = getWeight(mk->nr_kraw);
+			mst->dodajKraw(start, end, *w);
+			delete w;
+			wierzcholki.UnionSets(start, end);
+
+			wstawione++;
+		}
+	}
+
+	// pokazuje postep algorytmu
+	cout << "\b\b\b\b\b" << setw(4) << 100 << "%";
+
+	return mst;
 }

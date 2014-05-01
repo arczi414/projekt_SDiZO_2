@@ -13,15 +13,23 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	//manageMenu();
 
-	ZbioryRozlaczne zr(10);
+	MGraf graf;
+	graf.losujGraf(70, 1, false, false);
 
-	zr.UnionSets(0, 1);
-	zr.UnionSets(1, 2);
-	zr.UnionSets(1, 7);
-	zr.UnionSets(8, 1);
-	zr.UnionSets(3, 1);
-	zr.UnionSets(4, 5);
-	zr.UnionSets(9, 0);
+	//graf.pokazGraf();
+	cout << "\n\n";
+
+	MGraf *mst = graf.mstKruskal();
+	cout << endl;
+	//mst->pokazGraf();
+
+	cout << "\n\n";
+
+	mst = graf.mstPrim();
+	cout << endl;
+	//mst->pokazGraf();
+	
+	delete mst;
 
 	// TESTY JEDNOSTKOWE
 
