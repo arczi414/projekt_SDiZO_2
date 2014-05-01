@@ -4,6 +4,7 @@
 #include "krawedz_mac.h"
 #include "drzewoCzerCzar.h"
 #include <cstdlib>
+#include <iomanip>
 #include <ctime>
 
 using namespace std;
@@ -31,8 +32,12 @@ MGraf::~MGraf()
 /*
 	Funkcja zwraca true, jesli dany wierzcholek posiada juz wszystkie
 	mozliwe krawedzie.
+	Wynik funkcji zalezy rowniez od tego czy rozpatrywany jest graf
+	o podwojnych krawedziach(skierowany) czy mozliwe sa jedynie pojedyncze krawedzie.
+	UWAGA! Funkcja sprawdza tylko ilosc krawedzi dla wierzcholka, a nie czy te krawedzie
+	sa dopuszczalne.
 */
-bool MGraf::hasMax(int n)
+bool MGraf::hasMax(int n, bool podwojne_kraw)
 {
 	int n_kraw = 0; // liczba powiazanych krawedzi
 
@@ -44,7 +49,12 @@ bool MGraf::hasMax(int n)
 		}
 	}
 
-	if (n_kraw == 2 * (N - 1))
+	if (n_kraw == 2 * (N - 1) && podwojne_kraw)
+	{
+		return true;
+	}
+
+	if (n_kraw == N - 1 && !podwojne_kraw)
 	{
 		return true;
 	}
@@ -80,13 +90,16 @@ char MGraf::hasConnection(int n1, int n2)
 
 	if (n1n2 == 1)
 		return 1;
-	return -1;
+	else if(n2n1 == 1)
+		return -1;
+
+	return 0;
 }
 
 /*
 	Funkcja tworzaca losowy graf o zadanej gestosci.
 */
-void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
+void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw)
 {
 	srand(time(NULL));
 
@@ -103,7 +116,9 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
 	/* ******budowa drzewa rozpinajacego*********** */
 
 	N = n;	// liczba wierzcholkow
-	M = n * (n - 1) * gestosc;	// liczba krawedzi
+	M = n * (n - 1);	// liczba krawedzi
+	if (!podwojne_kraw) M /= 2;
+	M *= gestosc;
 	M = (M > n - 1 ? M : n - 1); // zabezpieczenie, aby zawsze utworzyc przynajmniej graf spojny
 	int size = N * M;	// rozmiar macierzy 'macierz'
 	int m = M; // liczba krawedzi pozostalych do wypelnienia
@@ -144,12 +159,23 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
 
 	/* ***********dodanie pozostalych krawedzi************* */
 	int nr_m = N - 1; // numer aktualnie dodawanej krawedzi
+	int m_pomiar = m, nr_wysw = 1; // potrzebne do wyswietlania postepu
+	cout << "Trwa losowanie grafu:";
+	cout << setw(5) << " ";
 	for (m, nr_m; m > 0; m--, nr_m++)
 	{
+		// pokazuje postep losowania grafu
+		if (((1 - (static_cast<double>(m) / m_pomiar)) * 100) > nr_wysw)
+		{
+			int wart = 100 - (static_cast<double>(m) / m_pomiar) * 100;
+			cout << "\b\b\b\b\b" << setw(4) << wart << "%";
+			nr_wysw++;
+		}
+
 		// losowanie wierzcholka startowego
 		int begin = rand() % N;
 
-		while (hasMax(begin))
+		while (hasMax(begin, podwojne_kraw))
 		{
 			begin = (begin + 1) % N;
 		}
@@ -159,9 +185,22 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
 
 		char connection = 0;
 
-		while (end == begin || hasMax(end) || (connection = hasConnection(begin, end)) == 2)
+		// w zaleznosci od tego czy maja byc losowane podwojne krawedzie
+		if (podwojne_kraw)
 		{
-			end = (end + 1) % N;
+			while (end == begin || (connection = hasConnection(begin, end)) == 2)
+			{
+				end = (end + 1) % N;
+			}
+		}
+		else
+		{
+			connection = hasConnection(begin, end);
+			while (end == begin || connection == 1 || connection == -1)
+			{
+				end = (end + 1) % N;
+				connection = hasConnection(begin, end);
+			}
 		}
 
 		// wylosowanie wagi
@@ -188,6 +227,9 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi)
 			wagi[nr_m] = r;
 		}
 	}
+
+	cout << "\b\b\b\b\b" << setw(4) << 100 << "%";
+	cout << endl;
 }
 
 /*

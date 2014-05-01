@@ -21,15 +21,15 @@ private:
 	int N;				// liczba wierzcholkow
 	int M;				// liczba krawedzi
 
-	bool hasMax(int n);	// mowi czy dany wierzcholek posiada wszystkie mozliwe krawedzie
+	bool hasMax(int n, bool podwojne_kraw = true);	// mowi czy dany wierzcholek posiada wszystkie mozliwe krawedzie
 	char hasConnection(int n1, int n2); // mowi czy dwa wierzcholki sa polaczone
 
 public:
 	MGraf();
 	~MGraf();
 
-	void losujGraf(int n, float gestosc, bool ujemne_wagi = true);	// n - liczba wierzcholkow
-	void pokazGraf();	// wypisuje graf na stdout
+	void losujGraf(int n, float gestosc, bool ujemne_wagi = true, bool podwojne_kraw = true); // n - liczba wierzcholkow
+	void pokazGraf(); // wypisuje graf na stdout
 	bool dodajKraw(int start, int koniec, int waga); // dodaje krawedz
 	bool usunKraw(int k); // usuwa podana krawedz
 	void usunPodwojne(); // usuwa podwojne krawedzie w drzewie (zostawia te o mniejszej wadze)

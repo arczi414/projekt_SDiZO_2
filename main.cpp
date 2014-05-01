@@ -13,18 +13,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	//manageMenu();
 
 	MGraf *graf = new MGraf();
-	graf->losujGraf(100, 1);	
+	graf->losujGraf(4, 1, true, false);
+	graf->pokazGraf();
+	//graf->pokazGraf();
 
 	//graf->usunPodwojne();
 
-	/*
-		LICZNIK
-		cout << setw(15) << " ";
-		for (int i = 0; i < 1000000; i++)
-		{
-		cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b" << setw(15) << i;
-		}
-	*/
+	graf->pokazGraf();
 
 	// TESTY JEDNOSTKOWE
 
@@ -58,7 +53,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	*/
 
 
-	cout << "Wcisnij dowolny klawisz, aby zakonczyc program...";
+	cout << "\n\nWcisnij dowolny klawisz, aby zakonczyc program...";
 	_getch();
 	return 0;
 }
