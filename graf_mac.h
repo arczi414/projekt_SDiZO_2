@@ -28,16 +28,22 @@ public:
 	MGraf();
 	~MGraf();
 
-	void losujGraf(int n, float gestosc, bool ujemne_wagi = false);	// n - liczba wierzcholkow
+	void losujGraf(int n, float gestosc, bool ujemne_wagi = true);	// n - liczba wierzcholkow
 	void pokazGraf();	// wypisuje graf na stdout
 	bool dodajKraw(int start, int koniec, int waga); // dodaje krawedz
+	bool usunKraw(int k); // usuwa podana krawedz
+	void usunPodwojne(); // usuwa podwojne krawedzie w drzewie (zostawia te o mniejszej wadze)
 	int dodajWierzch(); // dodaje wierzcholek
+	bool znajdzKrawedz(int start, int end); // sprawdza czy dana krawedz istnieje
 	int getStart(int k); // zwraca indeks wierzcholka startowego krawedzi
 	int getEnd(int k); // zwraca indeks wierzcholka koncowego krawedzi
 	int* getWeight(int k); // zwraca wage danej krawedzi
+	
+	int getNumOfVertices() { return N; }; // zwraca liczbe wierzcholkow
+	int getNumOfEdges() { return M; }; // zwraca liczbe krawedzi
 
 	/* ******************Minimalne drzewo rozpinajace**************** */
-	MGraf* mstPrime();
+	//MGraf* mstPrime();
 
 };
 
