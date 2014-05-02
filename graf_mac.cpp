@@ -423,6 +423,191 @@ int* MGraf::getWeight(int k)
 }
 
 /*
+	Funkcja zwraca w tablicy dostepne krawedzie z danego wierzcholka.
+	Jesli 'skierowany' wynosi true, za dostepne, zostana uznane jedynie
+	krawedzie wychodzace, jesli wynosi false, wszystkie krawedzie zwiazane
+	z wierzcholkiem 'w'.
+	Funkcja zwraca tablice int gdzie element o indeksie 0 informuje o liczbie
+	dostepnych krawedzi.
+*/
+int* MGraf::getAvailableEdges(int w, bool skierowany)
+{
+	int *dostepne = new int[1];
+	int *temp_dostepne = NULL;
+	dostepne[0] = 0;
+
+	// przeszukanie wierzcholka
+	for (int i = 0; i < M; i++)
+	{
+		if (skierowany)
+		{
+			if (macierz[w*M + i] == 1)
+			{
+				temp_dostepne = dostepne;
+				
+				// liczba dostepnych krawedzi w tablicy
+				int n_dostepne = temp_dostepne[0];
+
+				dostepne = new int[n_dostepne + 2];
+
+				// przepisanie poprzednich wartosci tablicy
+				for (int j = 0; j <= n_dostepne; j++)
+				{
+					dostepne[j] = temp_dostepne[j];
+				}
+
+				dostepne[0]++;
+				dostepne[ dostepne[0] ] = i;
+
+				if (temp_dostepne != NULL)
+				{
+					if (n_dostepne == 0)
+					{
+						delete temp_dostepne;
+					}
+					else
+					{
+						delete[] temp_dostepne;
+					}
+
+					temp_dostepne = NULL;
+				}
+			}
+		}
+		else
+		{
+			if (macierz[w*M + i] == 1 || macierz[w*M + i] == -1)
+			{
+				temp_dostepne = dostepne;
+
+				// liczba dostepnych krawedzi w tablicy
+				int n_dostepne = temp_dostepne[0];
+
+				dostepne = new int[n_dostepne + 2];
+
+				// przepisanie poprzednich wartosci tablicy
+				for (int j = 0; j <= n_dostepne; j++)
+				{
+					dostepne[j] = temp_dostepne[j];
+				}
+
+				dostepne[0]++;
+				dostepne[dostepne[0]] = i;
+
+				if (temp_dostepne != NULL)
+				{
+					if (n_dostepne == 0)
+					{
+						delete temp_dostepne;
+					}
+					else
+					{
+						delete[] temp_dostepne;
+					}
+
+					temp_dostepne = NULL;
+				}
+			}
+		}
+	}
+
+	return dostepne;
+}
+
+/*
+	Funkcja zwraca w tablicy dostepne wierzcholki z danego wierzcholka.
+	Jesli 'skierowany' wynosi true, za dostepne, zostana uznane jedynie
+	krawedzie wychodzace, jesli wynosi false, wszystkie krawedzie zwiazane
+	z wierzcholkiem 'w'.
+	Funkcja zwraca tablice int gdzie koszt_dojscia elementu o indeksie 0 informuje o liczbie
+	dostepnych wierzcholkow.
+*/
+MWierzcholek* MGraf::getAvailableVertices(int w, bool skierowany)
+{
+	MWierzcholek *dostepne = new MWierzcholek[1];
+	MWierzcholek *temp_dostepne = NULL;
+	dostepne[0] = MWierzcholek(0, -1, -1);
+
+	for (int i = 0; i < M; i++)
+	{
+		if (skierowany)
+		{
+			if (macierz[w*M + i] == 1)
+			{
+				for (int k = 0; k < N; k++)
+				{
+					if (macierz[k*M + i] == -1)
+					{
+						MWierzcholek a(*getWeight(i), k, w);
+						temp_dostepne = dostepne;
+
+						dostepne = new MWierzcholek[temp_dostepne[0].koszt_dojscia + 2];
+
+						// przepisanie poprzednich dostepnych
+						for (int j = 0; j <= temp_dostepne[0].koszt_dojscia; j++)
+						{
+							dostepne[j] = temp_dostepne[j];
+						}
+
+						// zwiekszenie liczby dostepnych
+						dostepne[0].koszt_dojscia++;
+
+						// dopisanie nowego
+						dostepne[dostepne[0].koszt_dojscia] = a;
+
+						if (temp_dostepne != NULL)
+						{
+							delete[] temp_dostepne;
+							temp_dostepne = NULL;
+						}
+
+						break;
+					}
+				}
+			}
+		}
+		else
+		{
+			if (macierz[w*M + i] == 1 || macierz[w*M + i] == -1)
+			{
+				for (int k = 0; k < N; k++)
+				{
+					if ((macierz[k*M + i] == -1 || macierz[w*M + i] == 1) && k != w)
+					{
+						MWierzcholek a(*getWeight(i), k, w);
+						temp_dostepne = dostepne;
+
+						dostepne = new MWierzcholek[temp_dostepne[0].koszt_dojscia + 2];
+
+						// przepisanie poprzednich dostepnych
+						for (int j = 0; j <= temp_dostepne[0].koszt_dojscia; j++)
+						{
+							dostepne[j] = temp_dostepne[j];
+						}
+
+						// zwiekszenie liczby dostepnych
+						dostepne[0].koszt_dojscia++;
+
+						// dopisanie nowego
+						dostepne[dostepne[0].koszt_dojscia] = a;
+
+						if (temp_dostepne != NULL)
+						{
+							delete[] temp_dostepne;
+							temp_dostepne = NULL;
+						}
+
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	return dostepne;
+}
+
+/*
 	Funkcja dodaje nowy wierzcholek do grafu i zwraca numer(indeks) dodanego
 	wierzcholka. np. dla wierzcholka nr 1 indeks wynosi 0
 */
@@ -613,16 +798,19 @@ MGraf* MGraf::mstPrim(bool podwojne_kraw)
 		cout << "\b\b\b\b\b" << setw(4) << wart << "%";
 
 		// przeszukanie dostepnych krawedzi wierzcholka 'poprz'
-		for (int k = 0; k < M; k++) // k - nr krawedzi
+		int *dostepne = getAvailableEdges(poprz);
+		if (dostepne != NULL)
 		{
-			if (macierz[poprz*M + k] == 1 || macierz[poprz*M + k] == -1)
+			for (int k = 1; k <= dostepne[0]; k++)
 			{
-				MKrawedz kraw(wagi[k], k);
-				if (dodaneKraw.find(k) == NULL)
+				int nr_k = dostepne[k];
+				MKrawedz kraw(wagi[nr_k], nr_k);
+				if (dodaneKraw.find(nr_k) == NULL)
 				{
 					kp.push(kraw);
 				}
 			}
+			delete[] dostepne;
 		}
 
 		// dodanie krawedzi o najmniejszej wadze prowadzacej do jeszcze
@@ -634,9 +822,9 @@ MGraf* MGraf::mstPrim(bool podwojne_kraw)
 
 		while (dodaneWierzch.find(start) && dodaneWierzch.find(end))
 		{
+			kr = kp.pop();
 			start = getStart(kr->nr_kraw);
 			end = getEnd(kr->nr_kraw);
-			kr = kp.pop();
 		}
 		
 		mst->dodajKraw(start, end, kr->waga);
@@ -730,4 +918,130 @@ MGraf* MGraf::mstKruskal(bool podwojne_kraw)
 	cout << "\b\b\b\b\b" << setw(4) << 100 << "%";
 
 	return mst;
+}
+
+/*_____________wyszukiwanie najkrotszej sciezki_______*/
+
+int* MGraf::sptDijkstra(int w)
+{
+	// tablica z informacja o koszcie dojscia z poszczegolnych wierzcholkow
+	int* koszty = new int[N];
+
+	// tablica poprzednikow
+	int *poprz = new int[N];
+
+	// kopiec zawierajacy dostepne wierzcholki
+	Kopiec<MWierzcholek> dostepne;
+	dostepne.setMin();
+
+	// tablica przechowujaca informacje o tym, czy dany wierzcholek zostal juz
+	// przeniesiony do zbioru S (obliczono dla niego koszt przejscia)
+	// jesli SQ[i] jest rowne false oznacza to, ze 'w' nalezy do zbioru Q
+	// jesli SQ[i] wynosi true to 'w' znajduje sie w S
+	bool *SQ = new bool[N];
+
+	// poczatkowo wszystkie wierzcholki naleza do Q
+	// a wszystkie koszty i nr poprzednikow wynosza -1
+	for (int i = 0; i < N; i++)
+	{
+		SQ[i] = false;
+		koszty[i] = -1;
+		poprz[i] = -1;
+	}
+
+	// dodanie 'w' do zbioru S
+	koszty[w] = 0;
+	SQ[w] = true;
+
+	// wyszukanie wierzcholkow dostepnych wierzcholkow z 'w'
+	MWierzcholek *mozliweW = getAvailableVertices(w);
+
+	// jesli zaden wierzcholek nie jest dostepny z 'w' to nie istnieje droga
+	// do zadnego innego wierzcholka
+	if (mozliweW != NULL)
+	{
+		// przeszukanie sasiadow 'w'
+		int n_mozliweW = mozliweW[0].koszt_dojscia; // liczba sasiadow
+
+		for (int i = 1; i <= n_mozliweW; i++)
+		{
+			int akt_w = mozliweW[i].nr_wierzch;
+
+			// sprawdzenie czy wierzcholek nalezy do zbioru Q
+			if (SQ[akt_w] == false)
+			{
+				// dodanie akt_w do dostepnych wierzcholkow
+				if (koszty[akt_w] == -1)
+				{
+					koszty[akt_w] = mozliweW[i].koszt_dojscia;
+					dostepne.push(MWierzcholek(koszty[akt_w], akt_w, w));
+				}
+			}
+		}
+
+		if (mozliweW != NULL)
+		{
+			delete[] mozliweW;
+			mozliweW = NULL;
+		}
+
+		//___________analiza pozostalych wierzcholkow_______________________
+		MWierzcholek *main_w = NULL;
+		int akt_w_int = -1;
+		n_mozliweW = -1;
+
+		// pokazuje postep wykonania algorytmu
+		cout << "Trwa wyszukiwanie najkrotszych sciezek (algorytm Dijkstry):";
+		cout << setw(5) << " ";
+
+		for (int i = 1; i < N; i++)
+		{
+			// pokazuje postep algorytmu
+			int wart = (static_cast<float>(i) / (N - 1)) * 100;
+			cout << "\b\b\b\b\b" << setw(4) << wart << "%";
+
+			main_w = dostepne.pop(); // zdjecie z kopca wierzcholka o najmniejszym koszcie
+
+			// zakonczenie algorymtu, jesli na stosie nie ma juz wierzcholkow
+			if (main_w != NULL)
+			{
+				akt_w_int = main_w->nr_wierzch;
+				SQ[akt_w_int] = true;
+
+				mozliweW = getAvailableVertices(akt_w_int);
+
+				// jesli nie akt_w nie ma sasiadow koszt dojscia do niego nie istnieje
+				if (mozliweW != NULL)
+				{
+					n_mozliweW = mozliweW[0].koszt_dojscia; // liczba sasiadow
+
+					for (int i = 1; i <= n_mozliweW; i++)
+					{
+						int akt_w = mozliweW[i].nr_wierzch;
+
+						// sprawdzenie czy wierzcholek nalezy do zbioru Q
+						if (SQ[akt_w] == false)
+						{
+							// dodanie akt_w do dostepnych wierzcholkow
+							if (koszty[akt_w] == -1)
+							{
+								koszty[akt_w] = mozliweW[i].koszt_dojscia + koszty[akt_w_int];
+								dostepne.push(MWierzcholek(koszty[akt_w], akt_w, w));
+							}
+							else if (mozliweW[i].koszt_dojscia + koszty[akt_w_int] < koszty[akt_w])
+							{
+								koszty[akt_w] = mozliweW[i].koszt_dojscia + koszty[akt_w_int];
+								dostepne.push(MWierzcholek(koszty[akt_w], akt_w, w));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// pokazuje postep algorytmu
+	cout << "\b\b\b\b\b" << setw(4) << 100 << "%\n";
+
+	return koszty;
 }

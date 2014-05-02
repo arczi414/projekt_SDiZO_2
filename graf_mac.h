@@ -1,6 +1,8 @@
 #ifndef _MGRAF_H_
 #define _MGRAF_H_
 
+#include "wierzcholek_mac.h"
+
 /*
 	Klasa grafu oparta na macierzy incydencji.
 */
@@ -37,6 +39,8 @@ public:
 	bool znajdzKrawedz(int start, int end); // sprawdza czy dana krawedz istnieje
 	int getStart(int k); // zwraca indeks wierzcholka startowego krawedzi
 	int getEnd(int k); // zwraca indeks wierzcholka koncowego krawedzi
+	int* getAvailableEdges(int w, bool skierowany = false); // zwraca dostepne krawedzie z danego wierzcholka
+	MWierzcholek* getAvailableVertices(int w, bool skierowany = true);
 	int* getWeight(int k); // zwraca wage danej krawedzi
 	
 	int getNumOfVertices() { return N; }; // zwraca liczbe wierzcholkow
@@ -45,6 +49,9 @@ public:
 	/* ******************Minimalne drzewo rozpinajace**************** */
 	MGraf* mstPrim(bool podwojne_kraw = false);
 	MGraf* mstKruskal(bool podwojne_kraw = false);
+
+	/* ****************Wyszukiwanie najkrotszej sciezki************** */
+	int* sptDijkstra(int w);
 
 };
 

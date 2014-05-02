@@ -2,6 +2,7 @@
 #include "menu.h"
 #include "graf_mac.h"
 #include "krawedz_mac.h"
+#include "wierzcholek_mac.h"
 #include "zbiory_rozlaczne.h"
 #include "lista.h"
 #include "kopiec.h"
@@ -14,22 +15,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	//manageMenu();
 
 	MGraf graf;
-	graf.losujGraf(70, 1, false, false);
 
-	//graf.pokazGraf();
-	cout << "\n\n";
-
-	MGraf *mst = graf.mstKruskal();
-	cout << endl;
-	//mst->pokazGraf();
-
-	cout << "\n\n";
-
-	mst = graf.mstPrim();
-	cout << endl;
-	//mst->pokazGraf();
-	
-	delete mst;
+	graf.losujGraf(200, 1, false);
+	graf.sptDijkstra(10);
 
 	// TESTY JEDNOSTKOWE
 
