@@ -15,17 +15,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	MGraf graf;
 	
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-
-	graf.dodajKraw(0, 1, 31886);
-	graf.dodajKraw(1, 2, 11224);
-	graf.dodajKraw(2, 3, 9910);
-	graf.dodajKraw(0, 2, 27361);
-	graf.dodajKraw(0, 3, 22559);
-	graf.dodajKraw(1, 3, 18810);
+	graf.losujGraf(4, 1, false, false);
 
 	MGraf *mst;
 

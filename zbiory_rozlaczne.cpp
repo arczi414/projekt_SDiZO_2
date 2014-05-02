@@ -41,7 +41,6 @@ void ZbioryRozlaczne::UnionSets(int w1, int w2)
 	{
 		if (repr[i] == repr[w2] && i != w2)
 		{
-			std::cout << "lol";
 			repr[i] = repr[w1];
 		}
 	}

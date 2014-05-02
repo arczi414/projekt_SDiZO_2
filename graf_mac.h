@@ -24,6 +24,11 @@ private:
 	bool hasMax(int n, bool podwojne_kraw = true);	// mowi czy dany wierzcholek posiada wszystkie mozliwe krawedzie
 	char hasConnection(int n1, int n2); // mowi czy dwa wierzcholki sa polaczone
 
+	// zmienne potrzebne przy implementacji algorytmu Dijkstry
+	int *vD; // wierzcholek dla ktorego sa aktualnie okreslone ponizsze zmienne
+	int *dD; // tablica kosztu przejscia od 'v' do innych wierzcholkow
+	int *pD; // tablica okreslajaca poprzedni wierzcholek w najkrotszej sciezce
+
 public:
 	MGraf();
 	~MGraf();
@@ -37,6 +42,7 @@ public:
 	bool znajdzKrawedz(int start, int end); // sprawdza czy dana krawedz istnieje
 	int getStart(int k); // zwraca indeks wierzcholka startowego krawedzi
 	int getEnd(int k); // zwraca indeks wierzcholka koncowego krawedzi
+	int* getAvailableEdges(int w, bool skierowany = false); // zwraca dostepne krawedzie z danego wierzcholka
 	int* getWeight(int k); // zwraca wage danej krawedzi
 	
 	int getNumOfVertices() { return N; }; // zwraca liczbe wierzcholkow
@@ -45,6 +51,9 @@ public:
 	/* ******************Minimalne drzewo rozpinajace**************** */
 	MGraf* mstPrim(bool podwojne_kraw = false);
 	MGraf* mstKruskal(bool podwojne_kraw = false);
+
+	/* ****************Wyszukiwanie najkrotszej sciezki************** */
+	void sptDijkstra(int w);
 
 };
 
