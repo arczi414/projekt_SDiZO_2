@@ -16,37 +16,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	MGraf graf;
 
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-
-	graf.dodajKraw(0, 1, 1);
-	graf.dodajKraw(1, 2, 1);
-	graf.dodajKraw(0, 5, 10);
-	graf.dodajKraw(1, 4, 3);
-	graf.dodajKraw(2, 3, 1);
-	graf.dodajKraw(3, 4, 1);
-	graf.dodajKraw(5, 6, 1);
-	graf.dodajKraw(4, 6, 8);
-	graf.dodajKraw(4, 7, 1);
-	graf.dodajKraw(6, 7, 2);
-	graf.dodajKraw(3, 8, 10);
-
-	graf.pokazGraf();
-	cout << "\n\n";
-
-	int *wagi = graf.sptDijkstra(0);
-
-	for (int i = 0; i < graf.getNumOfVertices(); i++)
-	{
-		cout << wagi[i] << ", ";
-	}
+	graf.losujGraf(200, 1, false);
+	graf.sptDijkstra(10);
 
 	// TESTY JEDNOSTKOWE
 

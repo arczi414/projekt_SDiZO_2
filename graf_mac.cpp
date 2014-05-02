@@ -960,18 +960,22 @@ int* MGraf::sptDijkstra(int w)
 	// do zadnego innego wierzcholka
 	if (mozliweW != NULL)
 	{
-		for (int i = 1; i <= mozliweW[0].koszt_dojscia; i++)
-		{
-			int akt_w = mozliweW[i].nr_wierzch; // aktualnie sprawdzany wierzcholek
+		// przeszukanie sasiadow 'w'
+		int n_mozliweW = mozliweW[0].koszt_dojscia; // liczba sasiadow
 
-			// wierzcholek zostanie dodany do dostepnych, pod warunkiem, ze nalezy do zbioru Q
-			// oraz ze koszt dojscia do niego przewyzsza aktualny koszt lub wierzcholek nie zostal
-			// jeszcze dodany
-			if (!SQ[akt_w] && (koszty[akt_w] > (koszty[akt_w] + mozliweW[i].koszt_dojscia) || koszty[akt_w] == -1))
+		for (int i = 1; i <= n_mozliweW; i++)
+		{
+			int akt_w = mozliweW[i].nr_wierzch;
+
+			// sprawdzenie czy wierzcholek nalezy do zbioru Q
+			if (SQ[akt_w] == false)
 			{
-				koszty[akt_w] = koszty[akt_w] == -1 ? mozliweW[i].koszt_dojscia : koszty[akt_w] + mozliweW[i].koszt_dojscia;
-				poprz[akt_w] = w;
-				dostepne.push(mozliweW[i]);
+				// dodanie akt_w do dostepnych wierzcholkow
+				if (koszty[akt_w] == -1)
+				{
+					koszty[akt_w] = mozliweW[i].koszt_dojscia;
+					dostepne.push(MWierzcholek(koszty[akt_w], akt_w, w));
+				}
 			}
 		}
 
@@ -981,50 +985,57 @@ int* MGraf::sptDijkstra(int w)
 			mozliweW = NULL;
 		}
 
+		//___________analiza pozostalych wierzcholkow_______________________
+		MWierzcholek *main_w = NULL;
+		int akt_w_int = -1;
+		n_mozliweW = -1;
+
+		// pokazuje postep wykonania algorytmu
 		cout << "Trwa wyszukiwanie najkrotszych sciezek (algorytm Dijkstry):";
 		cout << setw(5) << " ";
 
-		// wlasciwy algorytm
-		MWierzcholek *w_main;
-		for (int j = 1; j < N; j++)
+		for (int i = 1; i < N; i++)
 		{
 			// pokazuje postep algorytmu
-			int wart = (static_cast<float>(j) / (N - 1)) * 100;
+			int wart = (static_cast<float>(i) / (N - 1)) * 100;
 			cout << "\b\b\b\b\b" << setw(4) << wart << "%";
 
-			w_main = dostepne.pop();
-			
-			if (w_main != NULL)
-			{
-				SQ[w_main->nr_wierzch] = true;
-				mozliweW = getAvailableVertices(w_main->nr_wierzch);
+			main_w = dostepne.pop(); // zdjecie z kopca wierzcholka o najmniejszym koszcie
 
+			// zakonczenie algorymtu, jesli na stosie nie ma juz wierzcholkow
+			if (main_w != NULL)
+			{
+				akt_w_int = main_w->nr_wierzch;
+				SQ[akt_w_int] = true;
+
+				mozliweW = getAvailableVertices(akt_w_int);
+
+				// jesli nie akt_w nie ma sasiadow koszt dojscia do niego nie istnieje
 				if (mozliweW != NULL)
 				{
-					for (int i = 1; i <= mozliweW[0].koszt_dojscia; i++)
-					{
-						int akt_w = mozliweW[i].nr_wierzch; // aktualnie sprawdzany wierzcholek
+					n_mozliweW = mozliweW[0].koszt_dojscia; // liczba sasiadow
 
-						if (!SQ[akt_w] && (koszty[akt_w] > (koszty[akt_w] + mozliweW[i].koszt_dojscia) || koszty[akt_w] == -1))
+					for (int i = 1; i <= n_mozliweW; i++)
+					{
+						int akt_w = mozliweW[i].nr_wierzch;
+
+						// sprawdzenie czy wierzcholek nalezy do zbioru Q
+						if (SQ[akt_w] == false)
 						{
-							koszty[akt_w] = koszty[akt_w] == -1 ? mozliweW[i].koszt_dojscia : koszty[akt_w] + mozliweW[i].koszt_dojscia;
-							poprz[akt_w] = w;
-							dostepne.push(mozliweW[i]);
+							// dodanie akt_w do dostepnych wierzcholkow
+							if (koszty[akt_w] == -1)
+							{
+								koszty[akt_w] = mozliweW[i].koszt_dojscia + koszty[akt_w_int];
+								dostepne.push(MWierzcholek(koszty[akt_w], akt_w, w));
+							}
+							else if (mozliweW[i].koszt_dojscia + koszty[akt_w_int] < koszty[akt_w])
+							{
+								koszty[akt_w] = mozliweW[i].koszt_dojscia + koszty[akt_w_int];
+								dostepne.push(MWierzcholek(koszty[akt_w], akt_w, w));
+							}
 						}
 					}
 				}
-			}
-
-			if (mozliweW != NULL)
-			{
-				delete[] mozliweW;
-				mozliweW = NULL;
-			}
-
-			if (w_main != NULL)
-			{
-				delete w_main;
-				w_main = NULL;
 			}
 		}
 	}
