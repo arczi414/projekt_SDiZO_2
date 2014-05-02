@@ -15,19 +15,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	MGraf graf;
 	
-	//graf.losujGraf(4, 1, true, false);
-	
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-	graf.dodajWierzch();
-
-	graf.dodajKraw(1, 0, -11045);
-	graf.dodajKraw(1, 2, 3989);
-	graf.dodajKraw(2, 3, 29636);
-	graf.dodajKraw(1, 3, -26571);
-	graf.dodajKraw(3, 0, -16480);
-	graf.dodajKraw(0, 2, 7979);
+	graf.losujGraf(4, 1, true, false);
 
 	graf.pokazGraf();
 	cout << "\n\n";

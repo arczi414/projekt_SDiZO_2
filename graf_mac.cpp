@@ -729,9 +729,9 @@ MGraf* MGraf::mstPrim(bool podwojne_kraw)
 
 		while (dodaneWierzch.find(start) && dodaneWierzch.find(end))
 		{
+			kr = kp.pop();
 			start = getStart(kr->nr_kraw);
 			end = getEnd(kr->nr_kraw);
-			kr = kp.pop();
 		}
 		
 		mst->dodajKraw(start, end, kr->waga);
