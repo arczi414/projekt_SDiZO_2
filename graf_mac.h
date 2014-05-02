@@ -1,6 +1,8 @@
 #ifndef _MGRAF_H_
 #define _MGRAF_H_
 
+#include "wierzcholek_mac.h"
+
 /*
 	Klasa grafu oparta na macierzy incydencji.
 */
@@ -24,11 +26,6 @@ private:
 	bool hasMax(int n, bool podwojne_kraw = true);	// mowi czy dany wierzcholek posiada wszystkie mozliwe krawedzie
 	char hasConnection(int n1, int n2); // mowi czy dwa wierzcholki sa polaczone
 
-	// zmienne potrzebne przy implementacji algorytmu Dijkstry
-	int *vD; // wierzcholek dla ktorego sa aktualnie okreslone ponizsze zmienne
-	int *dD; // tablica kosztu przejscia od 'v' do innych wierzcholkow
-	int *pD; // tablica okreslajaca poprzedni wierzcholek w najkrotszej sciezce
-
 public:
 	MGraf();
 	~MGraf();
@@ -43,6 +40,7 @@ public:
 	int getStart(int k); // zwraca indeks wierzcholka startowego krawedzi
 	int getEnd(int k); // zwraca indeks wierzcholka koncowego krawedzi
 	int* getAvailableEdges(int w, bool skierowany = false); // zwraca dostepne krawedzie z danego wierzcholka
+	MWierzcholek* getAvailableVertices(int w, bool skierowany = true);
 	int* getWeight(int k); // zwraca wage danej krawedzi
 	
 	int getNumOfVertices() { return N; }; // zwraca liczbe wierzcholkow
@@ -53,7 +51,7 @@ public:
 	MGraf* mstKruskal(bool podwojne_kraw = false);
 
 	/* ****************Wyszukiwanie najkrotszej sciezki************** */
-	void sptDijkstra(int w);
+	int* sptDijkstra(int w);
 
 };
 

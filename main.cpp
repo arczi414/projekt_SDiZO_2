@@ -2,6 +2,7 @@
 #include "menu.h"
 #include "graf_mac.h"
 #include "krawedz_mac.h"
+#include "wierzcholek_mac.h"
 #include "zbiory_rozlaczne.h"
 #include "lista.h"
 #include "kopiec.h"
@@ -14,22 +15,38 @@ int _tmain(int argc, _TCHAR* argv[])
 	//manageMenu();
 
 	MGraf graf;
-	
-	graf.losujGraf(4, 1, true, false);
+
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+
+	graf.dodajKraw(0, 1, 1);
+	graf.dodajKraw(1, 2, 1);
+	graf.dodajKraw(0, 5, 10);
+	graf.dodajKraw(1, 4, 3);
+	graf.dodajKraw(2, 3, 1);
+	graf.dodajKraw(3, 4, 1);
+	graf.dodajKraw(5, 6, 1);
+	graf.dodajKraw(4, 6, 8);
+	graf.dodajKraw(4, 7, 1);
+	graf.dodajKraw(6, 7, 2);
+	graf.dodajKraw(3, 8, 10);
 
 	graf.pokazGraf();
 	cout << "\n\n";
 
-	MGraf *mst;
+	int *wagi = graf.sptDijkstra(0);
 
-	mst = graf.mstKruskal();
-	cout << "\n\n";
-	mst->pokazGraf();
-
-	cout << "\n\n";
-	mst = graf.mstPrim();
-	cout << "\n\n";
-	mst->pokazGraf();
+	for (int i = 0; i < graf.getNumOfVertices(); i++)
+	{
+		cout << wagi[i] << ", ";
+	}
 
 	// TESTY JEDNOSTKOWE
 
