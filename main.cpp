@@ -14,22 +14,29 @@ int _tmain(int argc, _TCHAR* argv[])
 	//manageMenu();
 
 	MGraf graf;
-	graf.losujGraf(70, 1, false, false);
-
-	//graf.pokazGraf();
-	cout << "\n\n";
-
-	MGraf *mst = graf.mstKruskal();
-	cout << endl;
-	//mst->pokazGraf();
-
-	cout << "\n\n";
-
-	mst = graf.mstPrim();
-	cout << endl;
-	//mst->pokazGraf();
 	
-	delete mst;
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+
+	graf.dodajKraw(0, 1, 31886);
+	graf.dodajKraw(1, 2, 11224);
+	graf.dodajKraw(2, 3, 9910);
+	graf.dodajKraw(0, 2, 27361);
+	graf.dodajKraw(0, 3, 22559);
+	graf.dodajKraw(1, 3, 18810);
+
+	MGraf *mst;
+
+	mst = graf.mstKruskal();
+	cout << "\n\n";
+	mst->pokazGraf();
+
+	cout << "\n\n";
+	mst = graf.mstPrim();
+	cout << "\n\n";
+	mst->pokazGraf();
 
 	// TESTY JEDNOSTKOWE
 
