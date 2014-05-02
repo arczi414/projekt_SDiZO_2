@@ -16,8 +16,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	MGraf graf;
 
-	graf.losujGraf(200, 1, false);
-	graf.sptDijkstra(10);
+	int *k = NULL, *p = NULL;
+
+	graf.losujGraf(60, 1, false);
+	graf.sptDijkstra(10, k, p);
 
 	// TESTY JEDNOSTKOWE
 

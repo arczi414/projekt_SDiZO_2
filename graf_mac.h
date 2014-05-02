@@ -51,7 +51,7 @@ public:
 	MGraf* mstKruskal(bool podwojne_kraw = false);
 
 	/* ****************Wyszukiwanie najkrotszej sciezki************** */
-	int* sptDijkstra(int w);
+	void sptDijkstra(int w, int *koszty, int *poprz);
 
 };
 

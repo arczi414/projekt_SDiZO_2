@@ -922,13 +922,35 @@ MGraf* MGraf::mstKruskal(bool podwojne_kraw)
 
 /*_____________wyszukiwanie najkrotszej sciezki_______*/
 
-int* MGraf::sptDijkstra(int w)
+/*
+	Algorytm Dijkstry znajdowania najkrotszej sciezki w grafie.
+	Graf musi posiadac nieujemne wagi.
+	
+	w - wierzcholek wzgledem ktorego wyszukiwana jest sciezka
+	koszty - tablica kosztow
+	poprz - tablica poprzednikow na najkrotszej sciezce
+*/
+void MGraf::sptDijkstra(int w, int *koszty, int *poprz)
 {
+	// init
+
+	if (koszty != NULL)
+	{
+		delete[] koszty;
+		koszty = NULL;
+	}
+
+	if (poprz != NULL)
+	{
+		delete[] poprz;
+		poprz = NULL;
+	}
+
 	// tablica z informacja o koszcie dojscia z poszczegolnych wierzcholkow
-	int* koszty = new int[N];
+	koszty = new int[N];
 
 	// tablica poprzednikow
-	int *poprz = new int[N];
+	poprz = new int[N];
 
 	// kopiec zawierajacy dostepne wierzcholki
 	Kopiec<MWierzcholek> dostepne;
@@ -1027,11 +1049,13 @@ int* MGraf::sptDijkstra(int w)
 							{
 								koszty[akt_w] = mozliweW[i].koszt_dojscia + koszty[akt_w_int];
 								dostepne.push(MWierzcholek(koszty[akt_w], akt_w, w));
+								poprz[akt_w] = akt_w_int;
 							}
 							else if (mozliweW[i].koszt_dojscia + koszty[akt_w_int] < koszty[akt_w])
 							{
 								koszty[akt_w] = mozliweW[i].koszt_dojscia + koszty[akt_w_int];
 								dostepne.push(MWierzcholek(koszty[akt_w], akt_w, w));
+								poprz[akt_w] = akt_w_int;
 							}
 						}
 					}
@@ -1042,6 +1066,5 @@ int* MGraf::sptDijkstra(int w)
 
 	// pokazuje postep algorytmu
 	cout << "\b\b\b\b\b" << setw(4) << 100 << "%\n";
-
-	return koszty;
 }
+
