@@ -710,8 +710,9 @@ MGraf* MGraf::mstPrim(bool podwojne_kraw)
 		{
 			for (int k = 1; k <= dostepne[0]; k++)
 			{
-				MKrawedz kraw(wagi[k], k);
-				if (dodaneKraw.find(k) == NULL)
+				int nr_k = dostepne[k];
+				MKrawedz kraw(wagi[nr_k], nr_k);
+				if (dodaneKraw.find(nr_k) == NULL)
 				{
 					kp.push(kraw);
 				}
