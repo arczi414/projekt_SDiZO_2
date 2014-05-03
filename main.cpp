@@ -15,19 +15,40 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	//manageMenu();
 
-	List<Integer> l;
+	MGraf graf;
+	//graf.losujGraf(30, 0.3, false);
 
-	Integer x;
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
+	graf.dodajWierzch();
 
-	l.insert(x, Integer(0), true);
-	l.insert(x, Integer(1), true);
-	l.insert(x, Integer(2), true);
+	graf.dodajKraw(0, 1, 0);
+	graf.dodajKraw(0, 7, 0);
+	graf.dodajKraw(0, 5, 0);
+	graf.dodajKraw(5, 4, 0);
+	graf.dodajKraw(4, 3, 0);
+	graf.dodajKraw(7, 3, 0);
+	graf.dodajKraw(1, 2, 0);
+	graf.dodajKraw(3, 2, 0);
+	graf.dodajKraw(4, 6, 0);
+	graf.dodajKraw(6, 4, 0);
 
-	Integer *a = NULL;
+	int *s = graf.findAugPathDFS(0, 3, &graf);
 
-	cout << *(a = l.popLast()) << endl;
-	cout << *(a = l.popLast()) << endl;
-	cout << *(a = l.popLast()) << endl;
+	if (s != NULL)
+	{
+		for (int i = 1; i <= s[0]; i++)
+		{
+			cout << s[i] << ", ";
+		}
+
+		cout << endl;
+	}
 
 	// TESTY JEDNOSTKOWE
 

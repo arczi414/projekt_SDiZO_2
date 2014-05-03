@@ -224,6 +224,11 @@ public:
 	*/
 	T* popFirst()
 	{
+		if (n == 0)
+		{
+			return NULL;
+		}
+
 		reset(1);
 
 		T* first = new T();
@@ -239,6 +244,11 @@ public:
 	*/
 	T* popLast()
 	{
+		if (n == 0)
+		{
+			return NULL;
+		}
+
 		reset(n);
 
 		T* last = new T();

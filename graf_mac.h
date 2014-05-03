@@ -55,7 +55,8 @@ public:
 	bool sptBellmanFord(int w, int **&koszty, int *&poprz);
 
 	/* *********************Przeszukiwanie grafu********************* */
-	int* findAugPathDFS(int start, int end, const int* const residual_graph);
+	int* findAugPathDFS(int start, int end, MGraf* const rsGraph);
+	int* findAugPathBFS(int start, int end, MGraf* const rsGraph);
 
 };
 

@@ -2,6 +2,8 @@
 #include "graf_mac.h"
 #include "kopiec.h"
 #include "krawedz_mac.h"
+#include "list_int.h"
+#include "lista.h"
 #include "drzewoCzerCzar.h"
 #include "zbiory_rozlaczne.h"
 #include <cstdlib>
@@ -1172,20 +1174,204 @@ bool MGraf::sptBellmanFord(int w, int **&koszty, int *&poprz)
 
 /*_____________wyszukiwanie istniejacych sciezek_______*/
 
-int* MGraf::findAugPathDFS(int start, int end, const int* const residual_graph)
+/*
+	Algorytm wyszukuje dowolna istniejaca sciezke w residualnym grafie 'rsGraph'
+	i zwraca jej przebieg w tablicy int (kolejne wierzcholki na sciezce).
+	Zerowy element zwracanej tablicy informuje o dlugosci sciezki.
+	Jesli funkcja zwraca NULL oznacza to, ze nie znaleziono zadnej sciezki.
+*/
+int* MGraf::findAugPathDFS(int start, int end, MGraf* const rsGraph)
 {
 	// init
 
-	int *sciezka = new int(N); // znaleziona sciezka (max dlugosc N)
-	bool *seen = new bool(N); // tablica informujaca o tym czy wierzcholek zostal juz przeszukany
+	// tablica informujaca o tym z jakiego wierzcholka trafiono do bierzacego
+	// jesli NULL oznacza to, ze wierzcholka jeszcze nie sprawdzano
+	int *poprz = new int[rsGraph->getNumOfVertices()];
+
+	List<MWierzcholek> kolejka; // kolejka do przechowywania dostepnych wierzcholkow
+	MWierzcholek* sasiedziW = NULL; // tablica do przechowywania dostepnych wierzcholkow z bierzacego
+
+	MWierzcholek *w = new MWierzcholek(start);
 
 	for (int i = 0; i < N; i++)
 	{
-		sciezka[i] = -1;
-		seen[i] = false;
+		poprz[i] = -1;
 	}
 
-	// 
+	// dodanie startowego wierzcholka do kolejki
+	kolejka.insert(*w, *w, true);
+	poprz[w->nr_wierzch] = w->nr_wierzch;
+
+	if (w != NULL) { delete w; w = NULL; }
+
+	// przeszukanie wszystkich wierzcholkow
+	for (int i = 0; i < N; i++)
+	{
+		w = kolejka.popFirst();
+
+		// zakonczenie przeszukiwania jesli w kolejce nie ma wiecej wierzcholkow
+		if (w == NULL) { break; }
+		else
+		{
+			sasiedziW = rsGraph->getAvailableVertices(w->nr_wierzch);
+
+			int n_sasiadow = sasiedziW[0].koszt_dojscia;
+
+			// wstawienie niesprawdzonych sasiadow do kolejki
+			for (int j = 1; j <= n_sasiadow; j++)
+			{
+				if (poprz[sasiedziW[j].nr_wierzch] == -1)
+				{
+					kolejka.insert(sasiedziW[j], sasiedziW[j], true);
+					poprz[sasiedziW[j].nr_wierzch] = w->nr_wierzch;
+				}
+			}
+
+			if (sasiedziW != NULL) { delete[] sasiedziW; sasiedziW = NULL; }
+			if (w != NULL) { delete w; w = NULL; }
+
+			// jesli osiagnieto wierzcholek 'end' mozna zakonczyc
+			if (poprz[end] != -1) { break; }
+		}
+	}
+
+	// analiza znalezionych poprzednikow 'end' i stworzenie 'sciezki'
+	int *sciezka = NULL; // znaleziona sciezka (max dlugosc N)
+
+	// jesli znaleziono sciezke do 'end'
+	if (poprz[end] != -1)
+	{
+		int length = 0; // dlugosc sciezki (liczba wierzcholkow posrednich)
+
+		int p = end;
+		while (p != start)
+		{
+			p = poprz[p];
+			length++;
+		}
+
+		// uwzglednienie pierwszego wierzcholka
+		length++;
+
+		sciezka = new int[length + 1];
+
+		sciezka[0] = length; // pierwszy element zawiera dlugosc sciezki (ilosc elementow - 1)
+		sciezka[length] = end; // ostatnim elementem sciezki jest 'end'
+
+		// wpisanie do 'sciezka' kolejnych wierzcholkow
+		p = end;
+		for (int i = length - 1; i >= 1; i--)
+		{
+			p = poprz[p];
+			sciezka[i] = p;
+		}
+	}
+
+	// sprzatanie
+	if (poprz != NULL) { delete poprz; poprz = NULL; }
+
+	return sciezka;
+}
+
+/*
+	Algorytm posiada niemal identyczna implementacje jak dla DFS, jedyna roznica
+	jest sposob pobierania elementow z kolejki. W tym przypadku jest ona kolejka
+	FIFO, w przeciwienstwie do LIFO w DFS.
+
+	Algorytm wyszukuje dowolna istniejaca sciezke w residualnym grafie 'rsGraph'
+	i zwraca jej przebieg w tablicy int (kolejne wierzcholki na sciezce).
+	Zerowy element zwracanej tablicy informuje o dlugosci sciezki.
+	Jesli funkcja zwraca NULL oznacza to, ze nie znaleziono zadnej sciezki.
+*/
+int* MGraf::findAugPathBFS(int start, int end, MGraf* const rsGraph)
+{
+	// init
+
+	// tablica informujaca o tym z jakiego wierzcholka trafiono do bierzacego
+	// jesli NULL oznacza to, ze wierzcholka jeszcze nie sprawdzano
+	int *poprz = new int[rsGraph->getNumOfVertices()];
+
+	List<MWierzcholek> kolejka; // kolejka do przechowywania dostepnych wierzcholkow
+	MWierzcholek* sasiedziW = NULL; // tablica do przechowywania dostepnych wierzcholkow z bierzacego
+
+	MWierzcholek *w = new MWierzcholek(start);
+
+	for (int i = 0; i < N; i++)
+	{
+		poprz[i] = -1;
+	}
+
+	// dodanie startowego wierzcholka do kolejki
+	kolejka.insert(*w, *w, true);
+	poprz[w->nr_wierzch] = w->nr_wierzch;
+
+	if (w != NULL) { delete w; w = NULL; }
+
+	// przeszukanie wszystkich wierzcholkow
+	for (int i = 0; i < N; i++)
+	{
+		w = kolejka.popLast();
+
+		// zakonczenie przeszukiwania jesli w kolejce nie ma wiecej wierzcholkow
+		if (w == NULL) { break; }
+		else
+		{
+			sasiedziW = rsGraph->getAvailableVertices(w->nr_wierzch);
+
+			int n_sasiadow = sasiedziW[0].koszt_dojscia;
+
+			// wstawienie niesprawdzonych sasiadow do kolejki
+			for (int j = 1; j <= n_sasiadow; j++)
+			{
+				if (poprz[sasiedziW[j].nr_wierzch] == -1)
+				{
+					kolejka.insert(sasiedziW[j], sasiedziW[j], true);
+					poprz[sasiedziW[j].nr_wierzch] = w->nr_wierzch;
+				}
+			}
+
+			if (sasiedziW != NULL) { delete[] sasiedziW; sasiedziW = NULL; }
+			if (w != NULL) { delete w; w = NULL; }
+
+			// jesli osiagnieto wierzcholek 'end' mozna zakonczyc
+			if (poprz[end] != -1) { break; }
+		}
+	}
+
+	// analiza znalezionych poprzednikow 'end' i stworzenie 'sciezki'
+	int *sciezka = NULL; // znaleziona sciezka (max dlugosc N)
+
+	// jesli znaleziono sciezke do 'end'
+	if (poprz[end] != -1)
+	{
+		int length = 0; // dlugosc sciezki (liczba wierzcholkow posrednich)
+
+		int p = end;
+		while (p != start)
+		{
+			p = poprz[p];
+			length++;
+		}
+
+		// uwzglednienie pierwszego wierzcholka
+		length++;
+
+		sciezka = new int[length + 1];
+
+		sciezka[0] = length; // pierwszy element zawiera dlugosc sciezki (ilosc elementow - 1)
+		sciezka[length] = end; // ostatnim elementem sciezki jest 'end'
+
+		// wpisanie do 'sciezka' kolejnych wierzcholkow
+		p = end;
+		for (int i = length - 1; i >= 1; i--)
+		{
+			p = poprz[p];
+			sciezka[i] = p;
+		}
+	}
+
+	// sprzatanie
+	if (poprz != NULL) { delete poprz; poprz = NULL; }
 
 	return sciezka;
 }

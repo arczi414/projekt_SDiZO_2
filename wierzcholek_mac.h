@@ -6,6 +6,7 @@ class MWierzcholek
 public:
 	MWierzcholek();
 	MWierzcholek(MWierzcholek &mw);
+	MWierzcholek(int nr_wierzch);
 	MWierzcholek(int koszt_dojscia, int nr_wierzch, int w_main);
 
 	~MWierzcholek();

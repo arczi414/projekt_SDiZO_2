@@ -15,6 +15,10 @@ MWierzcholek::MWierzcholek(MWierzcholek &mw)
 	prevElement = mw.prevElement;
 }
 
+MWierzcholek::MWierzcholek(int nr_wierzch) :
+nextElement(NULL), prevElement(NULL), koszt_dojscia(-1), nr_wierzch(nr_wierzch), w_main(-1)
+{ }
+
 MWierzcholek::MWierzcholek(int koszt_dojscia, int nr_wierzch, int w_main) :
 nextElement(NULL), prevElement(NULL), koszt_dojscia(koszt_dojscia), nr_wierzch(nr_wierzch), w_main(w_main)
 { }
