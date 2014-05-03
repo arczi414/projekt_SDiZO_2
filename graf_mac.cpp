@@ -752,6 +752,8 @@ bool MGraf::usunKraw(int k)
 	}
 }
 
+
+
 /*_____________minimalne drzewo rozpinajace___________*/
 
 /*
@@ -920,6 +922,8 @@ MGraf* MGraf::mstKruskal(bool podwojne_kraw)
 	return mst;
 }
 
+
+
 /*_____________wyszukiwanie najkrotszej sciezki_______*/
 
 /*
@@ -930,7 +934,7 @@ MGraf* MGraf::mstKruskal(bool podwojne_kraw)
 	koszty - tablica kosztow
 	poprz - tablica poprzednikow na najkrotszej sciezce
 */
-void MGraf::sptDijkstra(int w, int *koszty, int *poprz)
+void MGraf::sptDijkstra(int w, int *&koszty, int *&poprz)
 {
 	// init
 
@@ -1068,3 +1072,98 @@ void MGraf::sptDijkstra(int w, int *koszty, int *poprz)
 	cout << "\b\b\b\b\b" << setw(4) << 100 << "%\n";
 }
 
+/*
+	Algorytm Bellmana-Forda znajdowania najkrotszej sciezki w grafie.
+	Graf moze miec ujemne wagi.
+
+	Funkcja zwraca true jesli w grafie istnieje ujemny cykl, co oznacza, ze mozna osiagnac
+	dowolnie niskie koszty przejscia miedzy wierzcholkami.
+
+	w - wierzcholek wzgledem ktorego wyszukiwana jest sciezka
+	koszty - tablica kosztow
+	poprz - tablica poprzednikow na najkrotszej sciezce 
+*/
+bool MGraf::sptBellmanFord(int w, int **&koszty, int *&poprz)
+{
+	// init
+	if (koszty != NULL)	{ delete[] koszty; koszty = NULL; }
+	if (poprz != NULL) { delete[] poprz; poprz = NULL; }
+
+	koszty = new int*[N]; // tablica z informacja o koszcie dojscia z poszczegolnych wierzcholkow
+	poprz = new int[N]; // tablica poprzednikow
+
+	// poczatkowo wszystkie nr poprzednikow wynosza -1 oraz nie posiadaja obliczonego kosztu
+	for (int i = 0; i < N; i++)
+	{
+		koszty[i] = NULL; // NULL traktowane jest jako nieskonczonosc
+		poprz[i] = -1;
+	}
+
+	// rozpoczecie od glownego wierzcholka
+	koszty[w] = new int(0);
+
+	int *weight = NULL;
+	int end = -1;
+	int start = -1;
+
+	// pokazuje postep wykonania algorytmu
+	cout << "Trwa wyszukiwanie najkrotszych sciezek (algorytm Bellmana-Forda):";
+	cout << setw(5) << " ";
+
+	for (int i = 1; i < N; i++)
+	{
+		// pokazuje postep algorytmu
+		int wart = (static_cast<float>(i) / (N + M - 2)) * 100;
+		cout << "\b\b\b\b\b" << setw(4) << wart << "%";
+
+		// relaksacja wszystkich krawedzi
+		for (int k = 0; k < M; k++)
+		{
+			weight = getWeight(k);
+			end = getEnd(k);
+			start = getStart(k);
+
+			if (koszty[start] != NULL && koszty[end] == NULL)
+			{
+				koszty[end] = new int(*koszty[start] + * weight);
+				poprz[end] = start;
+			}
+			else if (koszty[end] != NULL && koszty[start] != NULL)
+			{
+				if (*koszty[end] > *koszty[start] + *weight)
+				{
+					*koszty[end] = *koszty[start] + *weight;
+					poprz[end] = start;
+				}
+			}
+
+			if (weight != NULL) { delete weight; weight = NULL; }
+		}
+	}
+
+	// szukanie ujemnego cyklu
+	bool cykl_ujemny = false;
+	for (int i = 0; i < M; i++)
+	{
+		// pokazuje postep algorytmu
+		int wart = (static_cast<float>(N + i) / (N + M - 2)) * 100;
+		cout << "\b\b\b\b\b" << setw(4) << wart << "%";
+
+		start = getStart(i); end = getEnd(i); weight = getWeight(i);
+
+		if (koszty[end] != NULL && koszty[start] != NULL)
+		{
+			// jesli znalezione koszty mozna poprawic to w grafie istnieje cykl ujemny
+			if (*koszty[end] > *koszty[start] + *weight) { cykl_ujemny = true; break; }
+		}
+
+		if (weight != NULL) { delete weight; weight = NULL; }
+	}
+
+	if (weight != NULL) { delete weight; weight = NULL; }
+
+	// pokazuje postep algorytmu
+	cout << "\b\b\b\b\b" << setw(4) << 100 << "%\n";
+
+	return cykl_ujemny;
+}
