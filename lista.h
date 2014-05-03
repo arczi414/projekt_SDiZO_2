@@ -80,13 +80,16 @@ public:
 	*/
 	bool remove(T usuw)
 	{
-		T *p_usuw = find(usuw);
+		T *p_usuw = NULL;
+
+		if (usuw == *pointer) { p_usuw = pointer; }
+		else { p_usuw = find(usuw); }
 
 		if (p_usuw != NULL)
 		{
 			// zapisanie elementow sasiadujacych
-			listElement *next = p_usuw->nextElement;
-			listElement *prev = p_usuw->prevElement;
+			T *next = p_usuw->nextElement;
+			T *prev = p_usuw->prevElement;
 
 			// aktualizacja elementow sasiadujacych u sasiadow usuwanego
 			if (next != NULL) { next->prevElement = prev; }
@@ -216,6 +219,36 @@ public:
 		}
 	};
 
+	/*
+		Zwraca pierwszy element i usuwa go z listy.
+	*/
+	T* popFirst()
+	{
+		reset(1);
+
+		T* first = new T();
+		*first = *pointer;
+
+		remove(*pointer);
+
+		return first;
+	};
+
+	/*
+		Zwraca ostatni element i usuwa go z listy.
+	*/
+	T* popLast()
+	{
+		reset(n);
+
+		T* last = new T();
+		*last = *pointer;
+
+		remove(*last);
+
+		return last;
+	};
+	
 	// pomocnicze
 
 	/*

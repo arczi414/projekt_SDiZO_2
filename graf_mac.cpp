@@ -1167,3 +1167,25 @@ bool MGraf::sptBellmanFord(int w, int **&koszty, int *&poprz)
 
 	return cykl_ujemny;
 }
+
+
+
+/*_____________wyszukiwanie istniejacych sciezek_______*/
+
+int* MGraf::findAugPathDFS(int start, int end, const int* const residual_graph)
+{
+	// init
+
+	int *sciezka = new int(N); // znaleziona sciezka (max dlugosc N)
+	bool *seen = new bool(N); // tablica informujaca o tym czy wierzcholek zostal juz przeszukany
+
+	for (int i = 0; i < N; i++)
+	{
+		sciezka[i] = -1;
+		seen[i] = false;
+	}
+
+	// 
+
+	return sciezka;
+}

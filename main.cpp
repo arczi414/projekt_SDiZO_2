@@ -6,6 +6,7 @@
 #include "zbiory_rozlaczne.h"
 #include "lista.h"
 #include "kopiec.h"
+#include "list_int.h"
 #include <iomanip>
 
 using namespace std;
@@ -14,7 +15,19 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	//manageMenu();
 
-	MGraf graf;
+	List<Integer> l;
+
+	Integer x;
+
+	l.insert(x, Integer(0), true);
+	l.insert(x, Integer(1), true);
+	l.insert(x, Integer(2), true);
+
+	Integer *a = NULL;
+
+	cout << *(a = l.popLast()) << endl;
+	cout << *(a = l.popLast()) << endl;
+	cout << *(a = l.popLast()) << endl;
 
 	// TESTY JEDNOSTKOWE
 

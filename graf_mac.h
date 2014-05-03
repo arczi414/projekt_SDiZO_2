@@ -54,6 +54,9 @@ public:
 	void sptDijkstra(int w, int *&koszty, int *&poprz);
 	bool sptBellmanFord(int w, int **&koszty, int *&poprz);
 
+	/* *********************Przeszukiwanie grafu********************* */
+	int* findAugPathDFS(int start, int end, const int* const residual_graph);
+
 };
 
 #endif
