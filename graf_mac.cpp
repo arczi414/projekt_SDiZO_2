@@ -49,6 +49,29 @@ MGraf::MGraf(const MGraf& mg)
 	}
 }
 
+MGraf* MGraf::Clone()
+{
+	MGraf *nowy_graf = new MGraf();
+
+	nowy_graf->N = N;
+	nowy_graf->M = M;
+	
+	nowy_graf->macierz = new char[N*M];
+	nowy_graf->wagi = new int[M];
+
+	for (int i = 0; i < N*M; i++)
+	{
+		nowy_graf->macierz[i] = macierz[i];
+	}
+
+	for (int i = 0; i < M; i++)
+	{
+		nowy_graf->wagi[i] = wagi[i];
+	}
+
+	return nowy_graf;
+}
+
 MGraf::~MGraf()
 {
 	if (macierz != NULL)

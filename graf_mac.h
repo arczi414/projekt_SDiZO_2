@@ -31,7 +31,7 @@ public:
 	MGraf();
 	MGraf(const MGraf& mg);
 
-	MGraf* Clone() { return NULL; };
+	MGraf* Clone();
 	MGraf* Create() { return NULL; };
 
 	~MGraf();
