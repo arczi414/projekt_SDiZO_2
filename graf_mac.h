@@ -32,7 +32,7 @@ public:
 	MGraf(const MGraf& mg);
 
 	MGraf* Clone();
-	MGraf* Create() { return NULL; };
+	MGraf* Create();
 
 	~MGraf();
 
@@ -65,11 +65,11 @@ public:
 	bool sptBellmanFord(int w, int **&koszty, int *&poprz);
 
 	/* *********************Przeszukiwanie grafu********************* */
-	int* findAugPathDFS(int start, int end, MGraf* const rsGraph);
-	int* findAugPathBFS(int start, int end, MGraf* const rsGraph);
+	//int* findAugPathDFS(int start, int end, MGraf* const rsGraph);
+	//int* findAugPathBFS(int start, int end, MGraf* const rsGraph);
 
 	/* *********************Najwiekszy przeplyw********************* */
-	int findMaxflowFordFulkerson(int source, int sink, char path_finding = 'B', MGraf* flowGraph = NULL);
+	//int findMaxflowFordFulkerson(int source, int sink, char path_finding = 'B', MGraf* flowGraph = NULL);
 
 };
 

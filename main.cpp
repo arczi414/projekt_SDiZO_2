@@ -20,8 +20,17 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	srand(time(NULL));
 
-	MGraf graf;
+	Graf *graf = new MGraf();
+	graf->losujGraf(30, 1);
+
+	for (int i = 0; i < 100; i++)
+	{
+		graf->findMaxflowFordFulkerson(0, 20);
+	}
+
+	delete graf;
 	
+	/*
 	graf.dodajWierzch();
 	graf.dodajWierzch();
 	graf.dodajWierzch();
@@ -49,6 +58,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "\n\n";
 	g->pokazGraf();
 	delete g;
+	*/
+
+
+
+
+
+
 
 	// TESTY JEDNOSTKOWE
 

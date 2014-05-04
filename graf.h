@@ -46,11 +46,11 @@ public:
 	bool sptBellmanFord(int w, int **&koszty, int *&poprz){ return false; };
 
 	/* *********************Przeszukiwanie grafu********************* */
-	int* findAugPathDFS(int start, int end, Graf* const rsGraph){ return NULL; };
-	int* findAugPathBFS(int start, int end, Graf* const rsGraph){ return NULL; };
+	int* findAugPathDFS(int start, int end, Graf* const rsGraph);
+	int* findAugPathBFS(int start, int end, Graf* const rsGraph);
 
 	/* *********************Najwiekszy przeplyw********************* */
-	int findMaxflowFordFulkerson(int source, int sink, char path_finding = 'B', Graf* flowGraph = NULL){ return 0; };
+	int findMaxflowFordFulkerson(int source, int sink, char path_finding = 'B', Graf* flowGraph = NULL);
 
 };
 
