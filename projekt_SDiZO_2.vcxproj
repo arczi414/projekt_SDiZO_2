@@ -75,6 +75,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="drzewoCzerCzar.h" />
+    <ClInclude Include="graf.h" />
     <ClInclude Include="graf_mac.h" />
     <ClInclude Include="kopiec.h" />
     <ClInclude Include="krawedz_mac.h" />
@@ -88,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="drzewoCzerCzar.cpp" />
+    <ClCompile Include="graf.cpp" />
     <ClCompile Include="graf_mac.cpp" />
     <ClCompile Include="krawedz_mac.cpp" />
     <ClCompile Include="menu.cpp" />

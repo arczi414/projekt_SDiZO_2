@@ -1,12 +1,13 @@
 #ifndef _MGRAF_H_
 #define _MGRAF_H_
 
+#include "graf.h"
 #include "wierzcholek_mac.h"
 
 /*
 	Klasa grafu oparta na macierzy incydencji.
 */
-class MGraf
+class MGraf : public Graf
 {
 private:
 	/*
@@ -29,6 +30,9 @@ private:
 public:
 	MGraf();
 	MGraf(const MGraf& mg);
+
+	MGraf* Clone() { return NULL; };
+	MGraf* Create() { return NULL; };
 
 	~MGraf();
 
