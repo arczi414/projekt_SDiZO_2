@@ -13,6 +13,8 @@ public:
 	Graf() {};
 	Graf(const Graf &mg) {};
 
+	virtual ~Graf() {};
+
 	virtual Graf* Clone() = 0;
 	virtual Graf* Create() = 0;
 
