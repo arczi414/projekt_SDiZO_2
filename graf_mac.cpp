@@ -1331,11 +1331,15 @@ int* MGraf::findAugPathDFS(int start, int end, MGraf* const rsGraph)
 			// wstawienie niesprawdzonych sasiadow do kolejki
 			for (int j = 1; j <= n_sasiadow; j++)
 			{
-				if (poprz[sasiedziW[j].nr_wierzch] == -1 && rsGraph->getWeight(sasiedziW[j].nr_wierzch) > 0)
+				int nr_kraw = rsGraph->getIndexOfEdge(w->nr_wierzch, sasiedziW[j].nr_wierzch);
+				int *waga_kraw = rsGraph->getWeight(nr_kraw);
+				if (poprz[sasiedziW[j].nr_wierzch] == -1 && *waga_kraw > 0)
 				{
 					kolejka.insert(sasiedziW[j], sasiedziW[j], true);
 					poprz[sasiedziW[j].nr_wierzch] = w->nr_wierzch;
 				}
+
+				if (waga_kraw != NULL) { delete waga_kraw; waga_kraw = NULL; }
 			}
 
 			if (sasiedziW != NULL) { delete[] sasiedziW; sasiedziW = NULL; }
@@ -1345,6 +1349,8 @@ int* MGraf::findAugPathDFS(int start, int end, MGraf* const rsGraph)
 			if (poprz[end] != -1) { break; }
 		}
 	}
+
+	if (w != NULL) { delete w; w = NULL; }
 
 	// analiza znalezionych poprzednikow 'end' i stworzenie 'sciezki'
 	int *sciezka = NULL; // znaleziona sciezka (max dlugosc N)
@@ -1379,7 +1385,7 @@ int* MGraf::findAugPathDFS(int start, int end, MGraf* const rsGraph)
 	}
 
 	// sprzatanie
-	if (poprz != NULL) { delete poprz; poprz = NULL; }
+	if (poprz != NULL) { delete[] poprz; poprz = NULL; }
 
 	return sciezka;
 }

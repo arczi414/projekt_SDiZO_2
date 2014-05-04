@@ -44,7 +44,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	MGraf *g = new MGraf();
 
-	cout << graf.findMaxflowFordFulkerson(0, 6, 'B', g);
+	cout << graf.findMaxflowFordFulkerson(0, 6, 'D', g);
 
 	cout << "\n\n";
 	g->pokazGraf();
