@@ -74,7 +74,7 @@ bool MKrawedz::operator <=(const MKrawedz &mk)
 
 MKrawedz& MKrawedz::operator =(const MKrawedz &mk)
 {
-	if (*this == mk)
+	if (this == &mk)
 	{
 		return *this;
 	}

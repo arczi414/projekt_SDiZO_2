@@ -8,6 +8,9 @@
 #include "kopiec.h"
 #include "list_int.h"
 #include <iomanip>
+#include <cstdlib>
+#include <ctime>
+#include <vld.h>
 
 using namespace std;
 
@@ -15,10 +18,10 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	//manageMenu();
 
+	srand(time(NULL));
+
 	MGraf graf;
-	//graf.losujGraf(30, 0.3, false);
-
-	graf.dodajWierzch();
+	
 	graf.dodajWierzch();
 	graf.dodajWierzch();
 	graf.dodajWierzch();
@@ -27,28 +30,25 @@ int _tmain(int argc, _TCHAR* argv[])
 	graf.dodajWierzch();
 	graf.dodajWierzch();
 
-	graf.dodajKraw(0, 1, 0);
-	graf.dodajKraw(0, 7, 0);
-	graf.dodajKraw(0, 5, 0);
-	graf.dodajKraw(5, 4, 0);
-	graf.dodajKraw(4, 3, 0);
-	graf.dodajKraw(7, 3, 0);
-	graf.dodajKraw(1, 2, 0);
-	graf.dodajKraw(3, 2, 0);
-	graf.dodajKraw(4, 6, 0);
-	graf.dodajKraw(6, 4, 0);
+	graf.dodajKraw(0, 1, 9);
+	graf.dodajKraw(0, 2, 9);
+	graf.dodajKraw(1, 4, 7);
+	graf.dodajKraw(2, 5, 6);
+	graf.dodajKraw(2, 3, 3);
+	graf.dodajKraw(1, 3, 3);
+	graf.dodajKraw(4, 3, 4);
+	graf.dodajKraw(3, 5, 2);
+	graf.dodajKraw(4, 6, 6);
+	graf.dodajKraw(3, 6, 9);
+	graf.dodajKraw(5, 6, 8);
 
-	int *s = graf.findAugPathDFS(0, 3, &graf);
+	MGraf *g = new MGraf();
 
-	if (s != NULL)
-	{
-		for (int i = 1; i <= s[0]; i++)
-		{
-			cout << s[i] << ", ";
-		}
+	cout << graf.findMaxflowFordFulkerson(0, 6, 'B', g);
 
-		cout << endl;
-	}
+	cout << "\n\n";
+	g->pokazGraf();
+	delete g;
 
 	// TESTY JEDNOSTKOWE
 

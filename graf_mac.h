@@ -28,7 +28,11 @@ private:
 
 public:
 	MGraf();
+	MGraf(const MGraf& mg);
+
 	~MGraf();
+
+	MGraf& operator =(const MGraf &mg);
 
 	void losujGraf(int n, float gestosc, bool ujemne_wagi = true, bool podwojne_kraw = true); // n - liczba wierzcholkow
 	void pokazGraf(); // wypisuje graf na stdout
@@ -37,11 +41,13 @@ public:
 	void usunPodwojne(); // usuwa podwojne krawedzie w drzewie (zostawia te o mniejszej wadze)
 	int dodajWierzch(); // dodaje wierzcholek
 	bool znajdzKrawedz(int start, int end); // sprawdza czy dana krawedz istnieje
+	int getIndexOfEdge(int start, int end); // zwraca numer krawedzi laczacej podane wierzcholki
 	int getStart(int k); // zwraca indeks wierzcholka startowego krawedzi
 	int getEnd(int k); // zwraca indeks wierzcholka koncowego krawedzi
 	int* getAvailableEdges(int w, bool skierowany = false); // zwraca dostepne krawedzie z danego wierzcholka
 	MWierzcholek* getAvailableVertices(int w, bool skierowany = true);
 	int* getWeight(int k); // zwraca wage danej krawedzi
+	bool setWeight(int k, int waga); // ustawia wage danej krawedzi
 	
 	int getNumOfVertices() { return N; }; // zwraca liczbe wierzcholkow
 	int getNumOfEdges() { return M; }; // zwraca liczbe krawedzi
@@ -57,6 +63,9 @@ public:
 	/* *********************Przeszukiwanie grafu********************* */
 	int* findAugPathDFS(int start, int end, MGraf* const rsGraph);
 	int* findAugPathBFS(int start, int end, MGraf* const rsGraph);
+
+	/* *********************Najwiekszy przeplyw********************* */
+	int findMaxflowFordFulkerson(int source, int sink, char path_finding = 'B', MGraf* flowGraph = NULL);
 
 };
 

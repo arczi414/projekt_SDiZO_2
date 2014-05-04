@@ -16,6 +16,39 @@ MGraf::MGraf() :
 macierz(NULL), wagi(NULL), N(0), M(0)
 { }
 
+MGraf::MGraf(const MGraf& mg)
+{
+	N = mg.N;
+	M = mg.M;
+
+	macierz = NULL;
+	wagi = NULL;
+
+	if (mg.macierz != NULL)
+	{
+		if (macierz != NULL) { delete[] macierz; }
+
+		macierz = new char[N*M];
+
+		for (int i = 0; i < N*M; i++)
+		{
+			macierz[i] = mg.macierz[i];
+		}
+	}
+
+	if (mg.wagi != NULL)
+	{
+		if (wagi != NULL) { delete[] wagi; }
+
+		wagi = new int[N*M];
+
+		for (int i = 0; i < M; i++)
+		{
+			wagi[i] = mg.wagi[i];
+		}
+	}
+}
+
 MGraf::~MGraf()
 {
 	if (macierz != NULL)
@@ -30,6 +63,38 @@ MGraf::~MGraf()
 
 	macierz = NULL;
 	wagi = NULL;
+}
+
+MGraf& MGraf::operator = (const MGraf &mg)
+{
+	if (&mg == this)
+	{
+		return *this;
+	}
+	else
+	{
+		if (macierz != NULL) { delete[] macierz; macierz = NULL; }
+		if (wagi != NULL) { delete[] wagi; wagi = NULL; }
+
+		N = mg.N;
+		M = mg.M;
+
+		if (mg.macierz != NULL)
+		{
+			for (int i = 0; i < N*M; i++)
+			{
+				macierz[i] = mg.macierz[i];
+			}
+		}
+
+		if (mg.wagi != NULL)
+		{
+			for (int i = 0; i < M; i++)
+			{
+				wagi[i] = mg.wagi[i];
+			}
+		}
+	}
 }
 
 /*
@@ -303,6 +368,8 @@ bool MGraf::dodajKraw(int start, int koniec, int waga)
 			wagi[i] = wagi_temp[i];
 		}
 
+		delete[] wagi_temp;
+
 		// dodanie wagi nowej krawedzi
 		wagi[M - 1] = waga;
 
@@ -336,6 +403,8 @@ bool MGraf::dodajKraw(int start, int koniec, int waga)
 				diff++;
 			}
 		}
+
+		delete[] macierz_temp;
 	}
 
 	return true;
@@ -361,6 +430,29 @@ bool MGraf::znajdzKrawedz(int start, int end)
 	}
 
 	return false;
+}
+
+/*
+	Funkcja zwraca indeks krawedzi, ktora laczy wierzcholek o indeksie 'start'
+	z wierzcholkiem o indeksie 'end'. Jesli krawedz nie istnieje, funkcja zwraca
+	-1;
+*/
+int MGraf::getIndexOfEdge(int start, int end)
+{
+	// przeszukanie wierzcholka 'start'
+	for (int i = 0; i < M; i++)
+	{
+		if (macierz[start*M + i] == 1)
+		{
+			// sprawdzenie czy znaleziona krawedz konczy sie w 'end'
+			if (macierz[end*M + i] == -1)
+			{
+				return i;
+			}
+		}
+	}
+
+	return -1;
 }
 
 /*
@@ -422,6 +514,21 @@ int* MGraf::getWeight(int k)
 	}
 
 	return weight;
+}
+
+/*
+	Funkcja ustawia wage podanej krawedzi. Jesli krawedz nie istnieje zwraca
+	false. Jesli istnieje - true.
+*/
+bool MGraf::setWeight(int k, int waga)
+{
+	if (k >= 0 && k < M)
+	{
+		wagi[k] = waga;
+		return true;
+	}
+
+	return false;
 }
 
 /*
@@ -540,8 +647,12 @@ MWierzcholek* MGraf::getAvailableVertices(int w, bool skierowany)
 				{
 					if (macierz[k*M + i] == -1)
 					{
-						MWierzcholek a(*getWeight(i), k, w);
+						int *waga_kraw = getWeight(i);
+
+						MWierzcholek a(*waga_kraw, k, w);
 						temp_dostepne = dostepne;
+
+						if (waga_kraw != NULL) { delete waga_kraw; waga_kraw = NULL; }
 
 						dostepne = new MWierzcholek[temp_dostepne[0].koszt_dojscia + 2];
 
@@ -1220,7 +1331,7 @@ int* MGraf::findAugPathDFS(int start, int end, MGraf* const rsGraph)
 			// wstawienie niesprawdzonych sasiadow do kolejki
 			for (int j = 1; j <= n_sasiadow; j++)
 			{
-				if (poprz[sasiedziW[j].nr_wierzch] == -1)
+				if (poprz[sasiedziW[j].nr_wierzch] == -1 && rsGraph->getWeight(sasiedziW[j].nr_wierzch) > 0)
 				{
 					kolejka.insert(sasiedziW[j], sasiedziW[j], true);
 					poprz[sasiedziW[j].nr_wierzch] = w->nr_wierzch;
@@ -1323,11 +1434,15 @@ int* MGraf::findAugPathBFS(int start, int end, MGraf* const rsGraph)
 			// wstawienie niesprawdzonych sasiadow do kolejki
 			for (int j = 1; j <= n_sasiadow; j++)
 			{
-				if (poprz[sasiedziW[j].nr_wierzch] == -1)
+				int nr_kraw = rsGraph->getIndexOfEdge(w->nr_wierzch, sasiedziW[j].nr_wierzch);
+				int *waga_kraw = rsGraph->getWeight(nr_kraw);
+				if (poprz[sasiedziW[j].nr_wierzch] == -1 && *waga_kraw > 0)
 				{
 					kolejka.insert(sasiedziW[j], sasiedziW[j], true);
 					poprz[sasiedziW[j].nr_wierzch] = w->nr_wierzch;
 				}
+
+				if (waga_kraw != NULL) { delete waga_kraw; waga_kraw = NULL; }
 			}
 
 			if (sasiedziW != NULL) { delete[] sasiedziW; sasiedziW = NULL; }
@@ -1337,6 +1452,8 @@ int* MGraf::findAugPathBFS(int start, int end, MGraf* const rsGraph)
 			if (poprz[end] != -1) { break; }
 		}
 	}
+
+	if (w != NULL) { delete w; w = NULL; }
 
 	// analiza znalezionych poprzednikow 'end' i stworzenie 'sciezki'
 	int *sciezka = NULL; // znaleziona sciezka (max dlugosc N)
@@ -1371,7 +1488,158 @@ int* MGraf::findAugPathBFS(int start, int end, MGraf* const rsGraph)
 	}
 
 	// sprzatanie
-	if (poprz != NULL) { delete poprz; poprz = NULL; }
+	if (poprz != NULL) { delete[] poprz; poprz = NULL; }
 
 	return sciezka;
+}
+
+
+
+
+/*_____________wyszukiwanie najwiekszego przeplywu_______*/
+
+/*
+	Algorytm Forda-Fulkersona znajdowania maksymalnego przeplywu w sieci przeplywowej.
+	Funkcja zwraca maksymalny przeplyw sieci. Wagi grafu sa interpretowane jako przepustowosc
+	residualna.
+
+	path_finding -	sposob wyszukiwania sciezek (B - BFS, D - DFS)
+	rsGraph -	jesli zostanie podany jako parametr zostana tam zapisane 
+				przeplywy na poszczegolnych krawedziach
+*/
+int MGraf::findMaxflowFordFulkerson(int source, int sink, char path_finding, MGraf* flowGraph)
+{
+	// init
+	MGraf residualGraph = MGraf(*this);
+	int maxFlow = 0;
+	bool flowGraph_return = false; // informuje o tym czy funkcja ma zwolnic pamiec, czy zajmie sie tym uzytkownik
+
+	if (flowGraph == NULL)
+	{
+
+		flowGraph = new MGraf(*this);
+	}
+	else
+	{
+		delete flowGraph;
+		flowGraph = new MGraf(*this);
+		flowGraph_return = true;
+	}
+
+	// wyzerowanie wag w grafie przeplywow
+	for (int i = 0; i < flowGraph->getNumOfEdges(); i++)
+	{
+		flowGraph->setWeight(i, 0);
+	}
+
+	if ((path_finding == 'B' || path_finding == 'D') && source >= 0 && source < N && sink >= 0 && sink < N)
+	{
+		// wlasciwy algorytm
+
+		// poczatkowo grafem residualnym jest po prostu graf sieci przeplywowej
+
+		int* aug_path = NULL;
+
+		if (path_finding == 'B') { aug_path = findAugPathBFS(source, sink, &residualGraph); }
+		else { aug_path = findAugPathDFS(source, sink, &residualGraph); }
+
+		// pokazuje postep wykonania algorytmu
+		cout << "Trwa wyszukiwanie najkrotszych sciezek (algorytm Bellmana-Forda)";
+		int iter = 0, dl = 7;
+
+		while (aug_path != NULL)
+		{
+			// pokazuje postep algorytmu
+			if (iter % dl == 0 && iter != 0)
+			{
+				for (int i = 0; i < dl; i++) cout << "\b";
+				for (int i = 0; i < dl; i++) cout << " ";
+				for (int i = 0; i < dl; i++) cout << "\b";
+				
+				iter = 0;
+			}
+			else
+			{
+				cout << ".";
+				iter++;
+			}
+
+			// wyszukanie najmniejszej przepustowosci residualnej dla zwroconej sciezki
+			int *min_cap = residualGraph.getWeight(residualGraph.getIndexOfEdge(aug_path[1], aug_path[2]));
+			int *akt_cap = NULL;
+			for (int i = 2; i < aug_path[0]; i++)
+			{
+				akt_cap = residualGraph.getWeight(residualGraph.getIndexOfEdge(aug_path[i], aug_path[i + 1]));
+
+				if (*akt_cap < *min_cap)
+				{
+					*min_cap = *akt_cap;
+				}
+
+				if (akt_cap != NULL) { delete akt_cap; akt_cap = NULL; }
+			}
+
+			// zwiekszenie przeplywu w znalezionych krawedziach o minimalna przepustowosc residualna
+			// oraz zmiana przepustowosci residualnych sieci
+			int nr_kraw = -1;
+			for (int i = 1; i < aug_path[0]; i++)
+			{
+				nr_kraw = residualGraph.getIndexOfEdge(aug_path[i], aug_path[i + 1]);
+				akt_cap = flowGraph->getWeight(nr_kraw);
+
+				flowGraph->setWeight(nr_kraw, *akt_cap + *min_cap);
+
+				int *G_weight = residualGraph.getWeight(nr_kraw);
+
+				residualGraph.setWeight(nr_kraw, *G_weight - *min_cap);
+
+				if (G_weight != NULL) { delete G_weight; G_weight = NULL; }
+
+				// obsluga krawedzi przeciwnych
+				if (!residualGraph.znajdzKrawedz(aug_path[i + 1], aug_path[i]))
+				{
+					residualGraph.dodajKraw(aug_path[i + 1], aug_path[i], 0);
+				}
+
+				int dod_kraw = residualGraph.getIndexOfEdge(aug_path[i + 1], aug_path[i]);
+
+				G_weight = flowGraph->getWeight(nr_kraw);
+				residualGraph.setWeight(dod_kraw, *G_weight);
+				if (G_weight != NULL) { delete G_weight; G_weight = NULL; }
+
+				if (akt_cap != NULL) { delete akt_cap; }
+			}
+
+			// wzrost ogolnego przeplywu
+			maxFlow += *min_cap;
+
+			// wyczyszczenie aug_path
+			if (aug_path != NULL) { delete[] aug_path; aug_path = NULL; }
+
+			if (min_cap != NULL) { delete min_cap; min_cap = NULL; }
+
+			// ponowne wyszukanie sciezki rozszerzajacej
+			if (path_finding == 'B') { aug_path = findAugPathBFS(source, sink, &residualGraph); }
+			else { aug_path = findAugPathDFS(source, sink, &residualGraph); }
+		}
+
+	}
+	else
+	{
+		cout << "findMaxflowFordFulkerson: Podano bledne argumenty.";
+	}
+
+	// sprzatanie
+	if (!flowGraph_return)
+	{
+		if (flowGraph != NULL)
+		{
+			delete flowGraph;
+			flowGraph = NULL;
+		}
+	}
+
+	cout << "\n";
+
+	return maxFlow;
 }

@@ -18,6 +18,19 @@ public:
 		pointer = head;
 	};
 
+	~List()
+	{
+		makenull();
+		
+		if (head != NULL)
+		{
+			delete head;
+			head = NULL;
+		}
+
+		pointer = NULL;
+	};
+
 	/*
 		Wstawia 'wstaw' za elementem o zawartosci 'pop'.
 		Jesli nie istnieje element 'pop' to element jest
