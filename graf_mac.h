@@ -57,12 +57,12 @@ public:
 	int getNumOfEdges() { return M; }; // zwraca liczbe krawedzi
 
 	/* ******************Minimalne drzewo rozpinajace**************** */
-	MGraf* mstPrim(bool podwojne_kraw = false);
-	MGraf* mstKruskal(bool podwojne_kraw = false);
+	//MGraf* mstPrim(bool podwojne_kraw = false);
+	//MGraf* mstKruskal(bool podwojne_kraw = false);
 
 	/* ****************Wyszukiwanie najkrotszej sciezki************** */
-	void sptDijkstra(int w, int *&koszty, int *&poprz);
-	bool sptBellmanFord(int w, int **&koszty, int *&poprz);
+	//void sptDijkstra(int w, int *&koszty, int *&poprz);
+	//bool sptBellmanFord(int w, int **&koszty, int *&poprz);
 
 	/* *********************Przeszukiwanie grafu********************* */
 	//int* findAugPathDFS(int start, int end, MGraf* const rsGraph);

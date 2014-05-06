@@ -21,13 +21,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	srand(time(NULL));
 
 	Graf *graf = new MGraf();
-	graf->losujGraf(30, 1);
+	graf->losujGraf(30, 1, false, false);
 
-	for (int i = 0; i < 10; i++)
+	int **koszty = NULL, *poprz = NULL;
+	graf->sptBellmanFord(0, koszty, poprz);
+
+	for (int i = 0; i < graf->getNumOfVertices(); i++)
 	{
-		graf->findMaxflowFordFulkerson(0, 20);
+		delete koszty[i];
 	}
-
+	delete[] koszty;
+	delete[] poprz;
 	delete graf;
 	
 	/*

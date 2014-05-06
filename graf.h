@@ -40,12 +40,12 @@ public:
 	/*__________________________A L G O R Y T M Y______________________*/
 
 	/* ******************Minimalne drzewo rozpinajace**************** */
-	void mstPrim(Graf* mst, bool podwojne_kraw = false){};
-	void mstKruskal(Graf* mst, bool podwojne_kraw = false){};
+	Graf* mstPrim(bool podwojne_kraw = false);
+	Graf* mstKruskal(bool podwojne_kraw = false);
 
 	/* ****************Wyszukiwanie najkrotszej sciezki************** */
-	void sptDijkstra(int w, int *&koszty, int *&poprz){};
-	bool sptBellmanFord(int w, int **&koszty, int *&poprz){ return false; };
+	void sptDijkstra(int w, int *&koszty, int *&poprz);
+	bool sptBellmanFord(int w, int **&koszty, int *&poprz);
 
 	/* *********************Przeszukiwanie grafu********************* */
 	int* findAugPathDFS(int start, int end, Graf* const rsGraph);
