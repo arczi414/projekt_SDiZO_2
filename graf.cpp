@@ -9,6 +9,63 @@
 
 using namespace std;
 
+/*
+Funkcja usuwa podwojne krawedzie w grafie. Jesli znajdzie dwa wierzcholki miedzy
+ktorymi znajduja sie dwie krawedzie pozostawia te o mniejszej wadze.
+*/
+void Graf::usunPodwojne()
+{
+	int start_a, start_s;
+	int koniec_a, koniec_s;
+
+	for (int k = 0; k < getNumOfEdges(); k++)
+	{
+		start_a = getStart(k);
+		koniec_a = getEnd(k);
+
+		for (int i = 0; i < getNumOfEdges(); i++)
+		{
+			if (i == k) continue;
+			else
+			{
+				start_s = getStart(i);
+				koniec_s = getEnd(i);
+
+				if (
+					(start_s == start_a && koniec_s == koniec_a) ||
+					(start_s == koniec_a && koniec_s == start_a)
+					)
+				{
+					int *w_s = getWeight(i);
+					int *w_a = getWeight(k);
+
+					// usuniecie krawedzi o wiekszej wadze
+					if (*w_s > *w_a)
+					{
+						usunKraw(i);
+					}
+					else
+					{
+						usunKraw(k);
+
+						// w przypadku usuniecia bierzacej krawedzi
+						// konieczne jest przesuniecie wskaznika, aby nie pominac
+						// kolejnej krawedzi
+						k--;
+					}
+
+					if (w_s != NULL) { delete w_s; w_s = NULL; }
+					if (w_a != NULL) { delete w_a; w_a = NULL; }
+
+					// nie moga wystapic trzy krawedzie pomiedzy dwoma wierzcholkami
+					// dlatego nie ma sensu porownywac reszte krawedzi
+					break;
+				}
+			}
+		}
+	}
+}
+
 /*_____________minimalne drzewo rozpinajace___________*/
 
 /*

@@ -1,25 +1,16 @@
-#ifndef _MGRAF_H_
-#define _MGRAF_H_
+#ifndef _LGRAF_H_
+#define _LGRAF_H_
 
 #include "graf.h"
 #include "wierzcholek_mac.h"
 
 /*
-	Klasa grafu oparta na macierzy incydencji.
+Klasa grafu oparta na macierzy incydencji.
 */
-class MGraf : public Graf
+class LGraf : public Graf
 {
 private:
-	/*
-		Wskaznik na macierz incydencji. Ulozenie wartosci odbywa sie
-		wedlug nastepujacej zasady: w tablicy ulozone sa kolejne wiersze
-		jeden za drugim. Zakladajac, ze n - l. wierszy, m - l. krawedzi, 
-		tablica ma dlugosc n*m. Np. element o indeksie 2n + m odpowiada
-		informacji o zwiazku m-tej krawedzi z trzecim wierzcholkiem.
-		Wartosc pod zadanym indeksem jest rowna wadze danej krawedzi.
-	*/
-	char *macierz;	
-	int *wagi;			// macierz wag grafu, o takiej samiej konstrukcji jak 'macierz'
+
 
 	int N;				// liczba wierzcholkow
 	int M;				// liczba krawedzi
@@ -28,15 +19,15 @@ private:
 	char hasConnection(int n1, int n2); // mowi czy dwa wierzcholki sa polaczone
 
 public:
-	MGraf();
-	MGraf(const MGraf& mg);
+	LGraf();
+	LGraf(const LGraf& mg);
 
-	MGraf* Clone();
-	MGraf* Create();
+	LGraf* Clone();
+	LGraf* Create();
 
-	~MGraf();
+	~LGraf();
 
-	MGraf& operator =(const MGraf &mg);
+	LGraf& operator =(const LGraf &mg);
 
 	void losujGraf(int n, float gestosc, bool ujemne_wagi = true, bool podwojne_kraw = true); // n - liczba wierzcholkow
 	void pokazGraf(); // wypisuje graf na stdout
@@ -51,7 +42,7 @@ public:
 	MWierzcholek* getAvailableVertices(int w, bool skierowany = true);
 	int* getWeight(int k); // zwraca wage danej krawedzi
 	bool setWeight(int k, int waga); // ustawia wage danej krawedzi
-	
+
 	int getNumOfVertices() { return N; }; // zwraca liczbe wierzcholkow
 	int getNumOfEdges() { return M; }; // zwraca liczbe krawedzi
 

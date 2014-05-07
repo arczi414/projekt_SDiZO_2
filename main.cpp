@@ -21,17 +21,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	srand(time(NULL));
 
 	Graf *graf = new MGraf();
-	graf->losujGraf(30, 1, false, false);
+	graf->losujGraf(30, 1);
 
-	int **koszty = NULL, *poprz = NULL;
-	graf->sptBellmanFord(0, koszty, poprz);
+	graf->usunPodwojne();
 
-	for (int i = 0; i < graf->getNumOfVertices(); i++)
-	{
-		delete koszty[i];
-	}
-	delete[] koszty;
-	delete[] poprz;
+	
 	delete graf;
 	
 	/*

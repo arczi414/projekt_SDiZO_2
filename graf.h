@@ -22,7 +22,6 @@ public:
 	virtual void pokazGraf() = 0;										// wypisuje graf na stdout
 	virtual bool dodajKraw(int start, int koniec, int waga) = 0;		// dodaje krawedz
 	virtual bool usunKraw(int k) = 0;									// usuwa podana krawedz
-	virtual void usunPodwojne() = 0;									// usuwa podwojne krawedzie w drzewie (zostawia te o mniejszej wadze)
 	virtual int dodajWierzch() = 0;										// dodaje wierzcholek
 	virtual bool znajdzKrawedz(int start, int end) = 0;					// sprawdza czy dana krawedz istnieje
 	virtual int getIndexOfEdge(int start, int end) = 0;					// zwraca numer krawedzi laczacej podane wierzcholki
@@ -36,6 +35,8 @@ public:
 	virtual int getNumOfVertices() = 0;									// zwraca liczbe wierzcholkow
 	virtual int getNumOfEdges() = 0;									// zwraca liczbe krawedzi
 
+
+	void usunPodwojne();	// usuwa podwojne krawedzie w drzewie (zostawia te o mniejszej wadze)
 
 	/*__________________________A L G O R Y T M Y______________________*/
 
