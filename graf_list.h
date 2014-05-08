@@ -3,6 +3,8 @@
 
 #include "graf.h"
 #include "wierzcholek_mac.h"
+#include "lista.h"
+#include "wierzcholek_sasiad.h"
 
 /*
 Klasa grafu oparta na macierzy incydencji.
@@ -10,7 +12,7 @@ Klasa grafu oparta na macierzy incydencji.
 class LGraf : public Graf
 {
 private:
-
+	List<SasWierzcholek> *listy; // tablica list sasiadow
 
 	int N;				// liczba wierzcholkow
 	int M;				// liczba krawedzi
@@ -20,15 +22,16 @@ private:
 
 public:
 	LGraf();
-	LGraf(const LGraf& mg);
+	LGraf(const LGraf& lg);
 
 	LGraf* Clone();
 	LGraf* Create();
 
 	~LGraf();
 
-	LGraf& operator =(const LGraf &mg);
+	LGraf& operator =(const LGraf &lg);
 
+	bool hasCon(int n1, int n2) { return hasConnection(n1, n2); }
 	void losujGraf(int n, float gestosc, bool ujemne_wagi = true, bool podwojne_kraw = true); // n - liczba wierzcholkow
 	void pokazGraf(); // wypisuje graf na stdout
 	bool dodajKraw(int start, int koniec, int waga); // dodaje krawedz

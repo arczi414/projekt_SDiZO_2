@@ -277,7 +277,7 @@ public:
 	/*
 		Zwraca rozmiar listy.
 	*/
-	int getSize() { return n };
+	int getSize() { return n; };
 
 	/*
 		Zwraca true jesli istnieje element dalszy niz ten wskazywany

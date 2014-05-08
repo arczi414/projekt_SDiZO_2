@@ -86,6 +86,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="wierzcholek_mac.h" />
+    <ClInclude Include="wierzcholek_sasiad.h" />
     <ClInclude Include="zbiory_rozlaczne.h" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +102,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="wierzcholek_mac.cpp" />
+    <ClCompile Include="wierzcholek_sasiad.cpp" />
     <ClCompile Include="zbiory_rozlaczne.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

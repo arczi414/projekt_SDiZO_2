@@ -300,7 +300,6 @@ void MGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw
 			}
 		}
 
-		// wylosowanie wagi
 		int r = rand();
 
 		if (r % 2 == 0) r = -1 * rand();

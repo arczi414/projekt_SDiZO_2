@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "menu.h"
 #include "graf_mac.h"
+#include "graf_list.h"
 #include "krawedz_mac.h"
 #include "wierzcholek_mac.h"
 #include "zbiory_rozlaczne.h"
@@ -20,12 +21,14 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	srand(time(NULL));
 
-	Graf *graf = new MGraf();
-	graf->losujGraf(30, 1);
+	Graf *graf = new LGraf();
 
-	graf->usunPodwojne();
+	graf->losujGraf(4, 1);
+	graf->pokazGraf();
+	//graf->findMaxflowFordFulkerson(0, 30);
 
-	
+	//graf->usunPodwojne();
+
 	delete graf;
 	
 	/*

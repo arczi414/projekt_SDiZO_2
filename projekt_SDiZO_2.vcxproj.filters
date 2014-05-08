@@ -54,6 +54,9 @@
     <ClInclude Include="graf_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="wierzcholek_sasiad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -84,6 +87,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="graf_list.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wierzcholek_sasiad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
