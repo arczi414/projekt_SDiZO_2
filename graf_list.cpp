@@ -220,15 +220,15 @@ void LGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw
 	/* *************dodanie pozostalych krawedzi************* */
 	int nr_m = N - 1; // nr aktualnie dodawanej krawedzi
 	int m_pomiar = m, nr_wysw = 1; // potrzebne do wyswietlania postepu
-	cout << "Trwa losowanie grafu:";
-	cout << setw(5) << " ";
+	std::cout << "Trwa losowanie grafu:";
+	std::cout << setw(5) << " ";
 	for (m, nr_m; m > 0; m--, nr_m++)
 	{
 		// pokazuje postep losowania grafu
 		if (((1 - (static_cast<double>(m) / m_pomiar)) * 100) > nr_wysw)
 		{
 			int wart = 100 - (static_cast<double>(m) / m_pomiar) * 100;
-			cout << "\b\b\b\b\b" << setw(4) << wart << "%";
+			std::cout << "\b\b\b\b\b" << setw(4) << wart << "%";
 			nr_wysw++;
 		}
 
@@ -278,17 +278,18 @@ void LGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw
 		}
 	}
 
-	cout << "\b\b\b\b\b" << setw(4) << 100 << "%";
-	cout << endl;
+	std::cout << "\b\b\b\b\b" << setw(4) << 100 << "%";
+	std::cout << endl;
 }
 
 void LGraf::pokazGraf()
 {
+	std::cout << "Lista sasiedztwa:\n";
 	for (int i = 0; i < N; i++)
 	{
 		stringstream ind;
 		ind << "[" << i << "]:";
-		cout << left << setw(8) << ind.str();
+		std::cout << left << setw(8) << ind.str();
 
 		SasWierzcholek *sas;
 		listy[i].reset(1);
@@ -296,21 +297,56 @@ void LGraf::pokazGraf()
 		{
 			stringstream sasiad;
 			sasiad << sas->nr_wierzch << "(" << sas->waga_kraw << ")";
-			cout << left << setw(15) << sasiad.str();
+			std::cout << left << setw(15) << sasiad.str();
 		}
 
-		cout << endl;
+		std::cout << endl;
 	}
 }
 
 bool LGraf::dodajKraw(int start, int koniec, int waga)
 {
-	return false;
+	// jesli nie istnieje jeden z podanych wierzcholkow
+	if (start >= N || start < 0 || koniec >= N || koniec < 0)
+	{
+		return false;
+	}
+	// sprawdzenie czy dana krawedz juz nie istnieje
+	else if (znajdzKrawedz(start, koniec))
+	{
+		return false;
+	}
+	else
+	{
+		SasWierzcholek w(koniec, waga, M++);
+		listy[start].insert(w, w, true);
+	}
+
+	return true;
 }
 
 bool LGraf::usunKraw(int k)
 {
-	return false;
+	if (k < 0 || k >= M)
+	{
+		return false;
+	}
+	else
+	{
+		// wyszukanie podanej krawedzi
+		for (int i = 0; i < N; i++)
+		{
+			SasWierzcholek *w = NULL;
+			listy[i].reset(1);
+			while (w = listy[i].next())
+			{
+				if (w->nr_kraw == k)
+				{
+
+				}
+			}
+		}
+	}
 }
 
 int LGraf::dodajWierzch()
@@ -318,8 +354,22 @@ int LGraf::dodajWierzch()
 	return 0;
 }
 
+/*
+	Funkcja sprawdza czy krawedz zaczynajaca sie w wierzcholku 'start' i konczaca w 'end'
+	juz istnieje w grafie. Jesli tak zwraca true, jesli nie, zwraca false.
+*/
 bool LGraf::znajdzKrawedz(int start, int end)
 {
+	SasWierzcholek *w = NULL;
+	listy[start].reset(1);
+	while (w = listy[start].next())
+	{
+		if (w->nr_wierzch == end)
+		{
+			return true;
+		}
+	}
+
 	return false;
 }
 

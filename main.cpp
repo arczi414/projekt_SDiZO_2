@@ -22,9 +22,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	srand(time(NULL));
 
 	Graf *graf = new LGraf();
-
-	graf->losujGraf(4, 1);
-	graf->pokazGraf();
+	for (int i = 0; i < 1000; i++)
+	graf->losujGraf(100, 0.5);
+	//graf->pokazGraf();
 	//graf->findMaxflowFordFulkerson(0, 30);
 
 	//graf->usunPodwojne();

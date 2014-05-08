@@ -27,7 +27,7 @@ SasWierzcholek::~SasWierzcholek()
 
 bool SasWierzcholek::operator ==(const SasWierzcholek &sw)
 {
-	if (sw.waga_kraw == waga_kraw && sw.nr_wierzch == nr_wierzch && sw.nr_kraw == nr_kraw)
+	if (sw.nr_wierzch == nr_wierzch)
 		return true;
 
 	return false;
@@ -35,7 +35,7 @@ bool SasWierzcholek::operator ==(const SasWierzcholek &sw)
 
 bool SasWierzcholek::operator !=(const SasWierzcholek &sw)
 {
-	if (sw.waga_kraw == waga_kraw && sw.nr_wierzch == nr_wierzch && sw.nr_kraw == nr_kraw)
+	if (sw.nr_wierzch == nr_wierzch)
 		return false;
 
 	return false;

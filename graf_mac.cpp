@@ -794,7 +794,7 @@ bool MGraf::usunKraw(int k)
 {
 	if (k < 0 || k >= M)
 	{
-		return NULL;
+		return false;
 	}
 	else
 	{
@@ -836,5 +836,7 @@ bool MGraf::usunKraw(int k)
 
 		delete[] temp_macierz;
 		delete[] temp_wagi;
+
+		return true;
 	}
 }
