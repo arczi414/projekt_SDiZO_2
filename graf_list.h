@@ -5,6 +5,7 @@
 #include "wierzcholek_mac.h"
 #include "lista.h"
 #include "wierzcholek_sasiad.h"
+#include "drzewoCzerCzar.h"
 
 /*
 Klasa grafu oparta na macierzy incydencji.
@@ -13,9 +14,12 @@ class LGraf : public Graf
 {
 private:
 	List<SasWierzcholek> *listy; // tablica list sasiadow
+	DrzewoCzerCzar nr_krawedzi; // tablica zawierajaca informacje o numerach krawedzi i przynaleznym wierzcholku
 
 	int N;				// liczba wierzcholkow
 	int M;				// liczba krawedzi
+
+	int nextEdgeNr; // potrzebne do numerowania krawedzi
 
 	bool hasMax(int n, bool podwojne_kraw = true);	// mowi czy dany wierzcholek posiada wszystkie mozliwe krawedzie
 	char hasConnection(int n1, int n2); // mowi czy dwa wierzcholki sa polaczone

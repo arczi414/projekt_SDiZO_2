@@ -9,13 +9,16 @@
 using namespace std;
 
 LGraf::LGraf() :
-listy(NULL), N(0), M(0)
+listy(NULL), N(0), M(0), nextEdgeNr(0)
 {}
 
 LGraf::LGraf(const LGraf& lg)
 {
 	N = lg.N;
 	M = lg.M;
+	nextEdgeNr = lg.nextEdgeNr;
+
+	nr_krawedzi = lg.nr_krawedzi;
 
 	listy = NULL;
 
@@ -36,6 +39,8 @@ LGraf* LGraf::Clone()
 
 	graf->N = N;
 	graf->M = M;
+	graf->nextEdgeNr = nextEdgeNr;
+	graf->nr_krawedzi = nr_krawedzi;
 
 	listy = NULL;
 
@@ -79,6 +84,8 @@ LGraf& LGraf::operator =(const LGraf &lg)
 
 		N = lg.N;
 		M = lg.M;
+		nextEdgeNr = lg.nextEdgeNr;
+		nr_krawedzi = lg.nr_krawedzi;
 
 		if (lg.listy != NULL)
 		{
@@ -212,17 +219,18 @@ void LGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw
 			waga *= znak;
 		}
 
-		SasWierzcholek nowy(i + 1, waga, i);
+		SasWierzcholek nowy(i + 1, waga, nextEdgeNr);
 		listy[i].insert(nowy, nowy, true);
+		nr_krawedzi.insert(nextEdgeNr, i);
+		nextEdgeNr++;
 		m--;
 	}
 
 	/* *************dodanie pozostalych krawedzi************* */
-	int nr_m = N - 1; // nr aktualnie dodawanej krawedzi
 	int m_pomiar = m, nr_wysw = 1; // potrzebne do wyswietlania postepu
 	std::cout << "Trwa losowanie grafu:";
 	std::cout << setw(5) << " ";
-	for (m, nr_m; m > 0; m--, nr_m++)
+	for (m; m > 0; m--)
 	{
 		// pokazuje postep losowania grafu
 		if (((1 - (static_cast<double>(m) / m_pomiar)) * 100) > nr_wysw)
@@ -268,13 +276,17 @@ void LGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw
 
 		if (connection == 1)
 		{
-			SasWierzcholek insW(begin, r, nr_m);
+			SasWierzcholek insW(begin, r, nextEdgeNr);
 			listy[end].insert(insW, insW, true);
+			nr_krawedzi.insert(nextEdgeNr, end);
+			nextEdgeNr++;
 		}
 		else
 		{
-			SasWierzcholek insW(end, r, nr_m);
+			SasWierzcholek insW(end, r, nextEdgeNr);
 			listy[begin].insert(insW, insW, true);
+			nr_krawedzi.insert(nextEdgeNr, begin);
+			nextEdgeNr++;
 		}
 	}
 
@@ -318,8 +330,11 @@ bool LGraf::dodajKraw(int start, int koniec, int waga)
 	}
 	else
 	{
-		SasWierzcholek w(koniec, waga, M++);
+		SasWierzcholek w(koniec, waga, nextEdgeNr);
 		listy[start].insert(w, w, true);
+		nr_krawedzi.insert(nextEdgeNr, start);
+		nextEdgeNr++;
+		M++;
 	}
 
 	return true;
@@ -334,24 +349,45 @@ bool LGraf::usunKraw(int k)
 	else
 	{
 		// wyszukanie podanej krawedzi
-		for (int i = 0; i < N; i++)
+		Node *szukana = nr_krawedzi.find(k);
+		// przeszukanie powiazanego wierzcholka
+		listy[szukana->data2].reset(1);
+		SasWierzcholek *sas = NULL;
+		while (sas = listy[szukana->data2].next())
 		{
-			SasWierzcholek *w = NULL;
-			listy[i].reset(1);
-			while (w = listy[i].next())
+			if (sas->nr_kraw == k)
 			{
-				if (w->nr_kraw == k)
-				{
-
-				}
+				listy[szukana->data2].remove(*sas);
+				nr_krawedzi.remove(k);
+				M--;
+				return true;
 			}
 		}
 	}
+
+	return false;
 }
 
 int LGraf::dodajWierzch()
 {
-	return 0;
+	N++; // zwiekszenie liczby wierzcholkow
+
+	List<SasWierzcholek> *temp_listy = listy;
+	listy = new List<SasWierzcholek>[N];
+
+	// przepisanie poprzedniej zawartosci
+	for (int i = 0; i < N - 1; i++)
+	{
+		listy[i] = temp_listy[i];
+	}
+
+	if (temp_listy != NULL)
+	{
+		delete[] temp_listy;
+		temp_listy = NULL;
+	}
+
+	return N-1;
 }
 
 /*

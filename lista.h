@@ -18,6 +18,28 @@ public:
 		pointer = head;
 	};
 
+	List(List<T>& ls)
+	{
+		n = ls.n;
+		head = new T();
+		
+		ls.reset(1);
+		if (ls.pointer != ls.head)
+		{
+			head->nextElement = new T(*(ls.pointer));
+			pointer = head->nextElement;
+			T *temp = NULL;
+			while (temp = ls.next())
+			{
+				pointer->nextElement = new T(*temp);
+				pointer->prevElement = pointer;
+				pointer = pointer->nextElement;
+			}
+
+			head->nextElement->prevElement = NULL;
+		}
+	};
+
 	~List()
 	{
 		makenull();
@@ -29,6 +51,12 @@ public:
 		}
 
 		pointer = NULL;
+	};
+
+	List<T>& operator=(List<T>& ls)
+	{
+		List<T> nowa(ls);
+		return nowa;
 	};
 
 	/*
@@ -95,7 +123,7 @@ public:
 	{
 		T *p_usuw = NULL;
 
-		if (usuw == *pointer) { p_usuw = pointer; }
+		if (pointer != NULL && usuw == *pointer) { p_usuw = pointer; }
 		else { p_usuw = find(usuw); }
 
 		if (p_usuw != NULL)

@@ -5,6 +5,7 @@
 #include "krawedz_mac.h"
 #include "wierzcholek_mac.h"
 #include "zbiory_rozlaczne.h"
+#include "drzewoCzerCzar.h"
 #include "lista.h"
 #include "kopiec.h"
 #include "list_int.h"
@@ -21,15 +22,42 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	srand(time(NULL));
 
-	Graf *graf = new LGraf();
-	for (int i = 0; i < 1000; i++)
-	graf->losujGraf(100, 0.5);
+	Graf *g = new LGraf();
+	
+	g->dodajWierzch();
+	g->dodajWierzch();
+	g->dodajWierzch();
+	g->dodajWierzch();
+	g->dodajWierzch();
+
+	g->dodajKraw(0, 1, 10);
+	g->dodajKraw(0, 4, 421);
+	g->dodajKraw(0, 2, 12);
+	g->dodajKraw(4, 3, 422);
+	g->dodajKraw(1, 2, 12);
+	g->dodajKraw(3, 2, 5523);
+	g->dodajKraw(4, 2, 42);
+	g->dodajKraw(3, 1, 12);
+	g->dodajKraw(2, 0, 3);
+
+	g->pokazGraf();
+	cout << "\n\n";
+
+	g->usunKraw(0);
+
+	g->pokazGraf();
+
+	delete g;
+
+	//Graf *graf = new LGraf();
+	//for (int i = 0; i < 1000; i++)
+	//graf->losujGraf(100, 0.5);
 	//graf->pokazGraf();
 	//graf->findMaxflowFordFulkerson(0, 30);
 
 	//graf->usunPodwojne();
 
-	delete graf;
+	//delete graf;
 	
 	/*
 	graf.dodajWierzch();
@@ -60,44 +88,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	g->pokazGraf();
 	delete g;
 	*/
-
-
-
-
-
-
-
-	// TESTY JEDNOSTKOWE
-
-	/*
-	TEST JEDNOSTKOWY - usunPodwojne()
-	for (int t = 0; t < 100000; t++)
-	{
-	graf->losujGraf(4, 1);
-	graf->usunPodwojne();
-
-	for (int k = 0; k < graf->getNumOfEdges(); k++)
-	{
-	int s_a = graf->getStart(k);
-	int k_a = graf->getEnd(k);
-
-	for (int i = 0; i < graf->getNumOfEdges(); i++)
-	{
-	int s_s = graf->getStart(i);
-	int k_s = graf->getEnd(i);
-
-	if (i != k)
-	{
-	if ((s_a == s_s && k_a == k_s) || (s_a == k_s && k_a == s_s))
-	{
-	cout << "Znaleziono podwojna krawedz w " << t << " tescie.\n";
-	}
-	}
-	}
-	}
-	}
-	*/
-
 
 	cout << "\n\nWcisnij dowolny klawisz, aby zakonczyc program...";
 	_getch();

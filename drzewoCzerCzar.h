@@ -1,3 +1,5 @@
+#pragma once
+
 struct Node;
 
 class DrzewoCzerCzar
@@ -9,11 +11,17 @@ private:
 	void printTree(Node* rt, int glebokosc);
 	void makenull(Node *root);
 
+
 public:
 	DrzewoCzerCzar();
+	DrzewoCzerCzar(const DrzewoCzerCzar& dcz);
 	~DrzewoCzerCzar();
 
-	void insert(int);	// wstawianie do wezla
+	Node* copyNode(const Node* n, const Node* guard);
+
+	DrzewoCzerCzar& operator=(const DrzewoCzerCzar& dcz);
+
+	void insert(int, int data2 = 0);	// wstawianie do wezla
 	bool remove(int);	// usuwanie danych
 	Node *find(int);	// znajdowanie danych
 	void print();		// wypisanie na ekran
@@ -29,9 +37,15 @@ public:
 
 struct Node
 {
+	Node()
+	{
+		left = right = up = NULL;
+	};
+
 	Node *up;
 	Node *left;
 	Node *right;
 	int data;
+	int data2;
 	char color;		// 'r' lub 'b'
 };

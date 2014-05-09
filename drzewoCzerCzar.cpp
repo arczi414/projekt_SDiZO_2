@@ -6,10 +6,69 @@ DrzewoCzerCzar::DrzewoCzerCzar()
 	guard = new Node();
 	guard->color = 'b';
 	guard->data = 0;
+	guard->data2 = 0;
 	guard->up = guard;
 	guard->left = guard;
 	guard->right = guard;
 	root = guard;
+}
+
+DrzewoCzerCzar::DrzewoCzerCzar(const DrzewoCzerCzar& dcz)
+{
+	if (dcz.root == dcz.guard)
+	{
+		guard = new Node();
+		guard->color = 'b';
+		guard->data = 0;
+		guard->data2 = 0;
+		guard->up = guard;
+		guard->left = guard;
+		guard->right = guard;
+		root = guard;	
+
+		n = dcz.n;
+	}
+	else
+	{
+		guard = new Node();
+		guard->color = dcz.guard->color;
+		guard->data = dcz.guard->data;
+		guard->data2 = dcz.guard->data2;
+		guard->up = guard;
+		guard->left = guard;
+		guard->right = guard;
+
+		n = dcz.n;
+
+		root = copyNode(dcz.root, dcz.guard);
+		root->up = guard;
+	}
+}
+
+DrzewoCzerCzar& DrzewoCzerCzar::operator = (const DrzewoCzerCzar& dcz)
+{
+	DrzewoCzerCzar nowe(dcz);
+	return nowe;
+}
+
+Node* DrzewoCzerCzar::copyNode(const Node* nd, const Node* guard)
+{
+	if (nd == guard)
+		return this->guard;
+	
+	Node* result = new Node();
+
+	result->color = nd->color;
+	result->data = nd->data;
+	result->data2 = nd->data2;
+	result->left = copyNode(nd->left, guard);
+	result->right = copyNode(nd->right, guard);
+	if (result->left != this->guard)
+		result->left->up = result;
+	if (result->right != this->guard)
+		result->right->up = result;
+
+	return result;
 }
 
 DrzewoCzerCzar::~DrzewoCzerCzar()
@@ -19,7 +78,7 @@ DrzewoCzerCzar::~DrzewoCzerCzar()
 }
 
 // wstawianie elementu do drzewa czerwono-czarnego
-void DrzewoCzerCzar::insert(int data)
+void DrzewoCzerCzar::insert(int data, int data2)
 {
 	Node* tempRoot = guard;
 	Node* temp = root;
@@ -37,7 +96,7 @@ void DrzewoCzerCzar::insert(int data)
 	{
 		root = new Node();
 		root->up = guard; root->left = guard; root->right = guard;
-		root->data = data; root->color = 'b';
+		root->data = data; root->data2 = data2; root->color = 'b';
 		return;
 	}
 	else
@@ -55,7 +114,7 @@ void DrzewoCzerCzar::insert(int data)
 
 		temp->left = guard; temp->right = guard;
 		temp->up = tempRoot; temp->data = data;
-		temp->color = 'r';
+		temp->data2 = data2; temp->color = 'r';
 	}
 
 	// przywracanie warunkow drzewa czerwono-czarnego
