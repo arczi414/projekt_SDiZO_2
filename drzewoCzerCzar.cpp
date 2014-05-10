@@ -47,8 +47,42 @@ DrzewoCzerCzar::DrzewoCzerCzar(const DrzewoCzerCzar& dcz)
 
 DrzewoCzerCzar& DrzewoCzerCzar::operator = (const DrzewoCzerCzar& dcz)
 {
-	DrzewoCzerCzar nowe(dcz);
-	return nowe;
+	if (this != &dcz) 
+	{
+		makenull();
+		delete root;
+		root = NULL;
+
+		if (dcz.root == dcz.guard)
+		{
+			guard = new Node();
+			guard->color = 'b';
+			guard->data = 0;
+			guard->data2 = 0;
+			guard->up = guard;
+			guard->left = guard;
+			guard->right = guard;
+			root = guard;
+
+			n = dcz.n;
+		}
+		else
+		{
+			guard = new Node();
+			guard->color = dcz.guard->color;
+			guard->data = dcz.guard->data;
+			guard->data2 = dcz.guard->data2;
+			guard->up = guard;
+			guard->left = guard;
+			guard->right = guard;
+
+			n = dcz.n;
+
+			root = copyNode(dcz.root, dcz.guard);
+			root->up = guard;
+		}
+	}
+	return *this;
 }
 
 Node* DrzewoCzerCzar::copyNode(const Node* nd, const Node* guard)
@@ -61,8 +95,10 @@ Node* DrzewoCzerCzar::copyNode(const Node* nd, const Node* guard)
 	result->color = nd->color;
 	result->data = nd->data;
 	result->data2 = nd->data2;
+
 	result->left = copyNode(nd->left, guard);
 	result->right = copyNode(nd->right, guard);
+
 	if (result->left != this->guard)
 		result->left->up = result;
 	if (result->right != this->guard)
@@ -279,7 +315,8 @@ void DrzewoCzerCzar::makenull(Node *root)
 			else if (root == root->up->right) root->up->right = guard;
 		}
 
-		delete root; 
+		delete root;
+		root = NULL;
 	}
 }
 

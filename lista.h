@@ -55,8 +55,40 @@ public:
 
 	List<T>& operator=(List<T>& ls)
 	{
-		List<T> nowa(ls);
-		return nowa;
+		if (this == &ls)
+		{
+			return *this;
+		}
+
+		makenull();
+
+		if (head != NULL)
+		{
+			delete head;
+			head = NULL;
+		}
+
+		n = ls.n;
+		head = new T();
+
+		ls.reset(1);
+		if (ls.pointer != ls.head)
+		{
+			head->nextElement = new T(*(ls.pointer));
+			pointer = head->nextElement;
+			T *temp = NULL;
+			ls.next();
+			while (temp = ls.next())
+			{
+				pointer->nextElement = new T(*temp);
+				pointer->prevElement = pointer;
+				pointer = pointer->nextElement;
+			}
+
+			head->nextElement->prevElement = NULL;
+		}
+
+		return *this;
 	};
 
 	/*

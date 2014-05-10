@@ -11,8 +11,8 @@ SasWierzcholek::SasWierzcholek(SasWierzcholek &sw)
 	waga_kraw = sw.waga_kraw;
 	nr_wierzch = sw.nr_wierzch;
 	nr_kraw = sw.nr_kraw;
-	nextElement = sw.nextElement;
-	prevElement = sw.prevElement;
+	nextElement = NULL;
+	prevElement = NULL;
 }
 
 SasWierzcholek::SasWierzcholek(int nr_wierzch, int waga_kraw, int nr_kraw) :

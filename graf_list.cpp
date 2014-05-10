@@ -9,14 +9,13 @@
 using namespace std;
 
 LGraf::LGraf() :
-listy(NULL), N(0), M(0), nextEdgeNr(0)
+listy(NULL), N(0), M(0)
 {}
 
 LGraf::LGraf(const LGraf& lg)
 {
 	N = lg.N;
 	M = lg.M;
-	nextEdgeNr = lg.nextEdgeNr;
 
 	nr_krawedzi = lg.nr_krawedzi;
 
@@ -39,10 +38,7 @@ LGraf* LGraf::Clone()
 
 	graf->N = N;
 	graf->M = M;
-	graf->nextEdgeNr = nextEdgeNr;
 	graf->nr_krawedzi = nr_krawedzi;
-
-	listy = NULL;
 
 	if (listy != NULL)
 	{
@@ -52,6 +48,10 @@ LGraf* LGraf::Clone()
 		{
 			graf->listy[i] = listy[i];
 		}
+	}
+	else
+	{
+		graf->listy = NULL;
 	}
 
 	return graf;
@@ -84,7 +84,6 @@ LGraf& LGraf::operator =(const LGraf &lg)
 
 		N = lg.N;
 		M = lg.M;
-		nextEdgeNr = lg.nextEdgeNr;
 		nr_krawedzi = lg.nr_krawedzi;
 
 		if (lg.listy != NULL)
@@ -219,18 +218,18 @@ void LGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw
 			waga *= znak;
 		}
 
-		SasWierzcholek nowy(i + 1, waga, nextEdgeNr);
+		SasWierzcholek nowy(i + 1, waga, i);
 		listy[i].insert(nowy, nowy, true);
-		nr_krawedzi.insert(nextEdgeNr, i);
-		nextEdgeNr++;
+		nr_krawedzi.insert(i, i);
 		m--;
 	}
 
 	/* *************dodanie pozostalych krawedzi************* */
 	int m_pomiar = m, nr_wysw = 1; // potrzebne do wyswietlania postepu
+	int nr_m = N - 1;
 	std::cout << "Trwa losowanie grafu:";
 	std::cout << setw(5) << " ";
-	for (m; m > 0; m--)
+	for (m; m > 0; m--, nr_m++)
 	{
 		// pokazuje postep losowania grafu
 		if (((1 - (static_cast<double>(m) / m_pomiar)) * 100) > nr_wysw)
@@ -276,17 +275,15 @@ void LGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw
 
 		if (connection == 1)
 		{
-			SasWierzcholek insW(begin, r, nextEdgeNr);
+			SasWierzcholek insW(begin, r, nr_m);
 			listy[end].insert(insW, insW, true);
-			nr_krawedzi.insert(nextEdgeNr, end);
-			nextEdgeNr++;
+			nr_krawedzi.insert(nr_m, end);
 		}
 		else
 		{
-			SasWierzcholek insW(end, r, nextEdgeNr);
+			SasWierzcholek insW(end, r, nr_m);
 			listy[begin].insert(insW, insW, true);
-			nr_krawedzi.insert(nextEdgeNr, begin);
-			nextEdgeNr++;
+			nr_krawedzi.insert(nr_m, begin);
 		}
 	}
 
@@ -330,10 +327,9 @@ bool LGraf::dodajKraw(int start, int koniec, int waga)
 	}
 	else
 	{
-		SasWierzcholek w(koniec, waga, nextEdgeNr);
+		SasWierzcholek w(koniec, waga, M);
 		listy[start].insert(w, w, true);
-		nr_krawedzi.insert(nextEdgeNr, start);
-		nextEdgeNr++;
+		nr_krawedzi.insert(M, start);
 		M++;
 	}
 
@@ -360,9 +356,28 @@ bool LGraf::usunKraw(int k)
 				listy[szukana->data2].remove(*sas);
 				nr_krawedzi.remove(k);
 				M--;
-				return true;
+				break;
 			}
 		}
+
+		// zmniejszenie numeracji krawedzi dla wszystkich powyzej k
+		for (int i = k + 1; i <= M; i++)
+		{
+			Node *node = nr_krawedzi.find(i);
+			node->data--;
+			listy[node->data2].reset(1);
+			SasWierzcholek *sW = NULL;
+			while (sW = listy[node->data2].next())
+			{
+				if (sW->nr_kraw == i)
+				{
+					sW->nr_kraw--;
+					break;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	return false;
@@ -409,37 +424,237 @@ bool LGraf::znajdzKrawedz(int start, int end)
 	return false;
 }
 
+/*
+	Funkcja zwraca indeks krawedzi, ktora laczy wierzcholek o indeksie 'start'
+	z wierzcholkiem o indeksie 'end'. Jesli krawedz nie istnieje, funkcja zwraca
+	-1
+*/
 int LGraf::getIndexOfEdge(int start, int end)
 {
-	return 0;
+	SasWierzcholek *w = NULL;
+	listy[start].reset(1);
+	while (w = listy[start].next())
+	{
+		if (w->nr_wierzch == end)
+		{
+			return w->nr_kraw;
+		}
+	}
+
+	return -1;
 }
 
+/*
+	Funkcja zwraca indeks wierzcholka poczatkowego krawedzi.
+	Jesli funkcja zwroci -1, oznacza to, ze podana krawedz nie istnieje.
+*/
 int LGraf::getStart(int k)
 {
-	return 0;
+	if (k >= M || k < 0)
+	{
+		return -1;
+	}
+	
+	Node *node = nr_krawedzi.find(k);
+
+	return node->data2;
 }
 
+/*
+	Funkcja zwraca indeks wierzcholka koncowego krawedzi.
+	Jesli funkcja zwroci -1, oznacza to, ze podana krawedz nie istnieje.
+*/
 int LGraf::getEnd(int k)
 {
-	return 0;
+	if (k >= M || k < 0)
+	{
+		return -1;
+	}
+
+	Node *node = nr_krawedzi.find(k);
+	SasWierzcholek *sW = NULL;
+	listy[node->data2].reset(1);
+	while (sW = listy[node->data2].next())
+	{
+		if (sW->nr_kraw == k)
+		{
+			return sW->nr_wierzch;
+		}
+	}
+
+	return -1;
 }
 
+/*
+	Funkcja zwraca w tablicy dostepne krawedzie z danego wierzcholka.
+	Jesli 'skierowany' wynosi true, za dostepne, zostana uznane jedynie
+	krawedzie wychodzace, jesli wynosi false, wszystkie krawedzie zwiazane
+	z wierzcholkiem 'w'.
+	Funkcja zwraca tablice int gdzie element o indeksie 0 informuje o liczbie
+	dostepnych krawedzi.
+*/
 int* LGraf::getAvailableEdges(int w, bool skierowany)
 {
-	return NULL;
+	int *dostepne = new int[listy[w].getSize() + 1];
+	int *temp_dostepne = NULL;
+	dostepne[0] = listy[w].getSize();
+
+	// dodanie krawedzi, ktorych wierzcholkiem startowym jest w
+	SasWierzcholek *sW = NULL;
+	listy[w].reset(1);
+	for (int i = 1; sW = listy[w].next(); i++)
+	{
+		dostepne[i] = sW->nr_kraw;
+	}
+
+	// dodanie pozostalych wierzcholkow w zaleznosci od 'skierowany'
+	if (!skierowany)
+	{
+		// przeszukanie pozostalych wierzcholkow
+		for (int i = 0; i < N; i++)
+		{
+			if (i == w)
+			{
+				continue;
+			}
+
+			SasWierzcholek *sW = NULL;
+			listy[i].reset(1);
+			while (sW = listy[i].next())
+			{
+				// jesli znaleziono polaczenie
+				if (sW->nr_wierzch == w)
+				{
+					dostepne[0]++;
+					temp_dostepne = dostepne;
+					dostepne = new int[temp_dostepne[0] + 1];
+
+					// przepisanie poprzedniej zawartosci
+					for (int j = 0; j < temp_dostepne[0]; j++)
+					{
+						dostepne[j] = temp_dostepne[j];
+					}
+
+					delete[] temp_dostepne;
+
+					dostepne[dostepne[0]] = sW->nr_kraw;
+				}
+			}
+		}
+	}
+
+	return dostepne;
 }
 
+/*
+	Funkcja zwraca w tablicy dostepne wierzcholki z danego wierzcholka.
+	Jesli 'skierowany' wynosi true, za dostepne, zostana uznane jedynie
+	krawedzie wychodzace, jesli wynosi false, wszystkie krawedzie zwiazane
+	z wierzcholkiem 'w'.
+	Funkcja zwraca tablice int gdzie koszt_dojscia elementu o indeksie 0 informuje o liczbie
+	dostepnych wierzcholkow.
+*/
 MWierzcholek* LGraf::getAvailableVertices(int w, bool skierowany)
 {
-	return NULL;
+	MWierzcholek *dostepne = new MWierzcholek[listy[w].getSize() + 1];
+	MWierzcholek *temp_dostepne = NULL;
+	dostepne[0] = MWierzcholek(listy[w].getSize(), -1, -1);
+
+	// dodanie wierzcholkow, ktorych wierzcholkiem startowym jest w
+	SasWierzcholek *sW = NULL;
+	listy[w].reset(1);
+	for (int i = 1; sW = listy[w].next(); i++)
+	{
+		dostepne[i] = MWierzcholek(sW->waga_kraw, sW->nr_wierzch, w);
+	}
+
+	// dodanie pozostalych wierzcholkow w zaleznosci od 'skierowany'
+	if (!skierowany)
+	{
+		// przeszukanie pozostalych wierzcholkow
+		for (int i = 0; i < N; i++)
+		{
+			if (i == w)
+			{
+				continue;
+			}
+
+			SasWierzcholek *sW = NULL;
+			listy[i].reset(1);
+			while (sW = listy[i].next())
+			{
+				// jesli znaleziono polaczenie
+				if (sW->nr_wierzch == w)
+				{
+					dostepne[0].koszt_dojscia++;
+					temp_dostepne = dostepne;
+					dostepne = new MWierzcholek[temp_dostepne[0].koszt_dojscia + 1];
+
+					// przepisanie poprzedniej zawartosci
+					for (int j = 0; j < temp_dostepne[0].koszt_dojscia; j++)
+					{
+						dostepne[j] = temp_dostepne[j];
+					}
+
+					delete[] temp_dostepne;
+
+					dostepne[dostepne[0].koszt_dojscia] = MWierzcholek(sW->waga_kraw, i, w);
+				}
+			}
+		}
+	}
+
+	return dostepne;
 }
 
+/*
+	Funkcja zwraca wskaznik na zmienna int, zawierajaca wage danej krawedzi.
+	Jesli zwroci NULL, oznacza to, ze podana krawedz nie istnieje.
+*/
 int* LGraf::getWeight(int k)
 {
+	if (k >= M || k < 0)
+	{
+		return NULL;
+	}
+
+	Node *node = nr_krawedzi.find(k);
+	SasWierzcholek *sW = NULL;
+	listy[node->data2].reset(1);
+	while (sW = listy[node->data2].next())
+	{
+		if (sW->nr_kraw == k)
+		{
+			int* waga = new int(sW->waga_kraw);
+			return waga;
+		}
+	}
+
 	return NULL;
 }
 
+/*
+	Funkcja ustawia wage podanej krawedzi. Jesli krawedz nie istnieje zwraca
+	false. Jesli istnieje - true.
+*/
 bool LGraf::setWeight(int k, int waga)
 {
+	if (k >= M || k < 0)
+	{
+		return false;
+	}
+
+	Node *node = nr_krawedzi.find(k);
+	SasWierzcholek *sW = NULL;
+	listy[node->data2].reset(1);
+	while (sW = listy[node->data2].next())
+	{
+		if (sW->nr_kraw == k)
+		{
+			sW->waga_kraw = waga;
+			return true;
+		}
+	}
+
 	return false;
 }

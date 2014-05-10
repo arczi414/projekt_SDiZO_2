@@ -660,7 +660,11 @@ int* Graf::findAugPathBFS(int start, int end, Graf* const rsGraph)
 				if (waga_kraw != NULL) { delete waga_kraw; waga_kraw = NULL; }
 			}
 
-			if (sasiedziW != NULL) { delete[] sasiedziW; sasiedziW = NULL; }
+			if (sasiedziW != NULL) { 
+				delete[] sasiedziW; 
+				sasiedziW = NULL; 
+			}
+
 			if (w != NULL) { delete w; w = NULL; }
 
 			// jesli osiagnieto wierzcholek 'end' mozna zakonczyc
