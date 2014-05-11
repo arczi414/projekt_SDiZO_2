@@ -74,8 +74,7 @@ MGraf* MGraf::Clone()
 
 MGraf* MGraf::Create()
 {
-	MGraf *nowy_graf = new MGraf();
-	return nowy_graf;
+	return new MGraf();;
 }
 
 MGraf::~MGraf()

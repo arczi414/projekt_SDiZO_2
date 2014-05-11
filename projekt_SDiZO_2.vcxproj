@@ -83,7 +83,9 @@
     <ClInclude Include="lista.h" />
     <ClInclude Include="list_int.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="pomiary.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="stoper.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="wierzcholek_mac.h" />
     <ClInclude Include="wierzcholek_sasiad.h" />
@@ -97,10 +99,12 @@
     <ClCompile Include="krawedz_mac.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pomiary.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="stoper.cpp" />
     <ClCompile Include="wierzcholek_mac.cpp" />
     <ClCompile Include="wierzcholek_sasiad.cpp" />
     <ClCompile Include="zbiory_rozlaczne.cpp" />

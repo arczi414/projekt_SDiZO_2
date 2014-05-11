@@ -57,6 +57,12 @@
     <ClInclude Include="wierzcholek_sasiad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pomiary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stoper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -90,6 +96,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wierzcholek_sasiad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pomiary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stoper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

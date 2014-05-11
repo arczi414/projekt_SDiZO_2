@@ -197,6 +197,8 @@ void LGraf::losujGraf(int n, float gestosc, bool ujemne_wagi, bool podwojne_kraw
 		listy = NULL;
 	}
 
+	nr_krawedzi.makenull();
+
 	/* ******budowa drzewa rozpinajacego*********** */
 
 	N = n;	// liczba wierzcholkow

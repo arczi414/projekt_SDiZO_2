@@ -762,7 +762,7 @@ int Graf::findMaxflowFordFulkerson(int source, int sink, char path_finding, Graf
 		else { aug_path = findAugPathDFS(source, sink, residualGraph); }
 
 		// pokazuje postep wykonania algorytmu
-		cout << "Trwa wyszukiwanie najkrotszych sciezek (algorytm Bellmana-Forda)";
+		cout << "Trwa wyszukiwanie maksymalnego przeplywu (algorytm Forda-Fulkersona)";
 		int iter = 0, dl = 7;
 
 		while (aug_path != NULL)
@@ -803,8 +803,8 @@ int Graf::findMaxflowFordFulkerson(int source, int sink, char path_finding, Graf
 			for (int i = 1; i < aug_path[0]; i++)
 			{
 				nr_kraw = residualGraph->getIndexOfEdge(aug_path[i], aug_path[i + 1]);
+				
 				akt_cap = flowGraph->getWeight(nr_kraw);
-
 				flowGraph->setWeight(nr_kraw, *akt_cap + *min_cap);
 
 				int *G_weight = residualGraph->getWeight(nr_kraw);
