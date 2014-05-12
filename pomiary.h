@@ -14,5 +14,6 @@ void pomiarSPT_MGraf(std::string plik);
 void pomiarSPT_LGraf(std::string plik);
 
 void pomiarMaxFlow_MGraf(std::string plik);
+void pomiarMaxFlow_LGraf(std::string plik);
 
 #endif

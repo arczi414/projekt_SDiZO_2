@@ -178,7 +178,7 @@ void pomiarSPT_MGraf(string plik)
 
 			for (int k = 0; k < iloscJedn; k++)
 			{
-				cout << "\n\nPomiar " << k << " dla " << l_wierzch[i] << "w i gestosci " << gestosc[j] << "\n\n";
+				cout << "\n\npomiarSPT_MGraf\nPomiar " << k << " dla " << l_wierzch[i] << "w i gestosci " << gestosc[j] << "\n\n";
 
 				int w = rand() % l_wierzch[i]; // wierzcholek odwolania
 				graf->losujGraf(l_wierzch[i], gestosc[j], false, false);
@@ -263,7 +263,7 @@ void pomiarSPT_LGraf(string plik)
 
 			for (int k = 0; k < iloscJedn; k++)
 			{
-				cout << "\n\nPomiar " << k << " dla " << l_wierzch[i] << "w i gestosci " << gestosc[j] << "\n\n";
+				cout << "\n\npomiarSPT_LGraf\nPomiar " << k << " dla " << l_wierzch[i] << "w i gestosci " << gestosc[j] << "\n\n";
 
 				int w = rand() % l_wierzch[i]; // wierzcholek odwolania
 				graf->losujGraf(l_wierzch[i], gestosc[j], false, false);
@@ -348,7 +348,7 @@ void pomiarMaxFlow_MGraf(string plik)
 
 			for (int k = 0; k < iloscJedn; k++)
 			{
-				cout << "\n\nPomiar " << k << " dla " << l_wierzch[i] << "w i gestosci " << gestosc[j] << "\n\n";
+				cout << "\n\npomiarMaxFlow_MGraf\nPomiar " << k << " dla " << l_wierzch[i] << "w i gestosci " << gestosc[j] << "\n\n";
 
 				int src = rand() % l_wierzch[i]; // wierzcholek zrodlo
 				int snk = rand() % l_wierzch[i]; // wierzcholek zlew
@@ -360,11 +360,88 @@ void pomiarMaxFlow_MGraf(string plik)
 
 				graf->losujGraf(l_wierzch[i], gestosc[j], false);
 
+				std::cout << "BFS: ";
 				stBFS.start();
 				graf->findMaxflowFordFulkerson(src, snk, 'B');
 				stBFS.stop();
 				sredniaPomiaru_bfs += stBFS.inMicrosec();
 
+				std::cout << "DFS: ";
+				stDFS.start();
+				graf->findMaxflowFordFulkerson(src, snk, 'D');
+				stDFS.stop();
+				sredniaPomiaru_dfs += stDFS.inMicrosec();
+			}
+
+			sredniaPomiaru_dfs /= iloscJedn;
+			stDFS.saveScore(sredniaPomiaru_dfs, l_wierzch[i], gestosc[j]);
+
+			sredniaPomiaru_bfs /= iloscJedn;
+			stBFS.saveScore(sredniaPomiaru_bfs, l_wierzch[i], gestosc[j]);
+		}
+	}
+
+	if (graf != NULL)
+	{
+		delete graf;
+	}
+
+	stDFS.closeFile();
+	stBFS.closeFile();
+	std::cout << endl;
+}
+
+void pomiarMaxFlow_LGraf(string plik)
+{
+	srand(time(NULL));
+
+	Stoper stDFS;
+	Stoper stBFS;
+
+	string dfs = "lGraf_FordFulkersonDFS_" + plik;
+	string bfs = "lGraf_FordFulkersonBFS_" + plik;
+	stDFS.openFile(dfs);
+	stBFS.openFile(bfs);
+	srand(time(NULL));
+
+	// graf
+	Graf *graf = new LGraf();
+
+	// dodawanie elementu
+	int l_wierzch[] = { 10, 50, 100, 200, 280, 350 };
+	double gestosc[] = { 0.25, 0.5, 0.75, 0.99 };
+	int iloscJedn = 10;	// liczba pomiarow pojedynczej operacji
+	double sredniaPomiaru_dfs, sredniaPomiaru_bfs;
+
+	// dodawanie na poczatku
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			sredniaPomiaru_dfs = 0;
+			sredniaPomiaru_bfs = 0;
+
+			for (int k = 0; k < iloscJedn; k++)
+			{
+				cout << "\n\npomiarMaxFlow_LGraf\nPomiar " << k << " dla " << l_wierzch[i] << "w i gestosci " << gestosc[j] << "\n\n";
+
+				int src = rand() % l_wierzch[i]; // wierzcholek zrodlo
+				int snk = rand() % l_wierzch[i]; // wierzcholek zlew
+
+				while (src == snk)
+				{
+					snk = rand() % l_wierzch[i];
+				}
+
+				graf->losujGraf(l_wierzch[i], gestosc[j], false);
+
+				std::cout << "BFS: ";
+				stBFS.start();
+				graf->findMaxflowFordFulkerson(src, snk, 'B');
+				stBFS.stop();
+				sredniaPomiaru_bfs += stBFS.inMicrosec();
+
+				std::cout << "DFS: ";
 				stDFS.start();
 				graf->findMaxflowFordFulkerson(src, snk, 'D');
 				stDFS.stop();

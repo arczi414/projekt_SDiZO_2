@@ -8,5 +8,7 @@ za zarzadzanie menu.
 
 int manageMenu();
 char showMainMenu();
+char showLGrafMenu();
+void manageLGrafMenu();
 
 #endif

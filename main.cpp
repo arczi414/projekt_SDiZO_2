@@ -19,15 +19,18 @@ using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	manageMenu();
+	
 	//pomiarMST_MGraf("mst.txt");
 	//pomiarMST_LGraf("mst.txt");
 	
 	//pomiarSPT_MGraf("spt.txt");
 	//pomiarSPT_LGraf("spt.txt");
 
-	pomiarMaxFlow_MGraf("maxFlow.txt");
+	//pomiarMaxFlow_MGraf("maxFlow.txt");
+	//pomiarMaxFlow_LGraf("FordFulkersonMaxFlow.txt");
 
-	cout << "\n\nWcisnij dowolny klawisz, aby zakonczyc program...";
+	//cout << "\n\nWcisnij dowolny klawisz, aby zakonczyc program...";
 	_getch();
 	return 0;
 }

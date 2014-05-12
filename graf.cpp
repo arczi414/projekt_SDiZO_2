@@ -758,6 +758,8 @@ int Graf::findMaxflowFordFulkerson(int source, int sink, char path_finding, Graf
 
 		int* aug_path = NULL;
 
+		DrzewoCzerCzar powiazania; // drzwo BST okreslajace zwiazek krawedzi residualnych z pierwotnymi
+
 		if (path_finding == 'B') { aug_path = findAugPathBFS(source, sink, residualGraph); }
 		else { aug_path = findAugPathDFS(source, sink, residualGraph); }
 
@@ -804,8 +806,17 @@ int Graf::findMaxflowFordFulkerson(int source, int sink, char path_finding, Graf
 			{
 				nr_kraw = residualGraph->getIndexOfEdge(aug_path[i], aug_path[i + 1]);
 				
-				akt_cap = flowGraph->getWeight(nr_kraw);
-				flowGraph->setWeight(nr_kraw, *akt_cap + *min_cap);
+				if (nr_kraw >= flowGraph->getNumOfEdges())
+				{
+					Node *node = powiazania.find(nr_kraw);
+					akt_cap = flowGraph->getWeight(node->data2);
+					flowGraph->setWeight(node->data2, *akt_cap - *min_cap);
+				}
+				else
+				{
+					akt_cap = flowGraph->getWeight(nr_kraw);
+					flowGraph->setWeight(nr_kraw, *akt_cap + *min_cap);
+				}
 
 				int *G_weight = residualGraph->getWeight(nr_kraw);
 
@@ -817,12 +828,23 @@ int Graf::findMaxflowFordFulkerson(int source, int sink, char path_finding, Graf
 				if (!residualGraph->znajdzKrawedz(aug_path[i + 1], aug_path[i]))
 				{
 					residualGraph->dodajKraw(aug_path[i + 1], aug_path[i], 0);
+					powiazania.insert(residualGraph->getNumOfEdges() - 1, residualGraph->getIndexOfEdge(aug_path[i], aug_path[i+1]));
 				}
 
 				int dod_kraw = residualGraph->getIndexOfEdge(aug_path[i + 1], aug_path[i]);
 
-				G_weight = flowGraph->getWeight(nr_kraw);
-				residualGraph->setWeight(dod_kraw, *G_weight);
+				if (nr_kraw >= flowGraph->getNumOfEdges())
+				{
+					Node *node = powiazania.find(nr_kraw);
+					G_weight = flowGraph->getWeight(node->data2);
+					residualGraph->setWeight(dod_kraw, *G_weight);
+				}
+				else
+				{
+					G_weight = flowGraph->getWeight(nr_kraw);
+					residualGraph->setWeight(dod_kraw, *G_weight);
+				}
+
 				if (G_weight != NULL) { delete G_weight; G_weight = NULL; }
 
 				if (akt_cap != NULL) { delete akt_cap; }
