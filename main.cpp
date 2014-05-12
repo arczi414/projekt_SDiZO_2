@@ -13,7 +13,6 @@
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
-#include <vld.h>
 
 using namespace std;
 

@@ -10,5 +10,7 @@ int manageMenu();
 char showMainMenu();
 char showLGrafMenu();
 void manageLGrafMenu();
+char showMGrafMenu();
+void manageMGrafMenu();
 
 #endif
